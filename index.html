@@ -124,7 +124,8 @@
         }
 
         .header-content {
-            max-width: 1000px;
+            width: 88%;
+            max-width: 1400px;
             margin: 0 auto;
             text-align: center;
             display: flex;
@@ -135,9 +136,9 @@
         /* QR Codes Styles */
         .qr-card {
             background: rgba(255, 255, 255, 0.05);
-            padding: 9px;
+            padding: 12px;
             border-radius: 8px;
-            border: 1px solid var(--glass-border);
+            border: 2px solid var(--glass-border);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             display: flex;
@@ -172,8 +173,8 @@
         /* Center Icon inside QR */
         .qr-center-icon {
             position: absolute;
-            width: 30px;
-            height: 30px;
+            width: 23px;
+            height: 23px;
             background: #ffffff;
             border-radius: 6px;
             padding: 0px;
@@ -187,15 +188,12 @@
             height: auto;
             display: block;
             margin-bottom: 2rem;
-            /* Drop-shadow is used instead of box-shadow to contour to your transparent image! */
             transition: transform 0.3s ease, filter 0.3s ease;
             filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.4));
         }
 
         .profile-pic:hover {
-            /* Scales slightly in place without shifting its Y-axis position */
-            transform: scale(1.5); 
-            /* Creates a centralized, balanced cyan glow */
+            transform: scale(1.45); 
             filter: drop-shadow(0 0 30px rgba(0, 255, 185, 0.4)); 
         }
 
@@ -219,33 +217,72 @@
         }
 
         /* ==========================================
-           4. CATEGORY HEADERS
+           4. CATEGORY HEADERS (INTERACTIVE & BIG)
            ========================================== */
         .category-wrapper {
-            max-width: 1000px;
-            margin: 4rem auto 2rem auto;
-            padding: 0 2rem;
+            width: 88%;
+            max-width: 1400px;
+            margin: 5rem auto 3rem auto;
             position: relative;
             z-index: 10;
+            text-align: center;
         }
 
         .category-title {
-            font-size: 1.1rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1.4rem, 4vw, 2rem);
             text-transform: uppercase;
-            letter-spacing: 3px;
-            font-weight: 600;
+            letter-spacing: 4px;
+            font-weight: 800;
+            color: var(--text-main);
+            padding: 1rem 3rem;
+            background: rgba(0, 255, 185, 0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba(0, 255, 185, 0.05);
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            position: relative;
+            overflow: hidden;
+            cursor: default;
+        }
+
+        /* Sweeping shine effect */
+        .category-title::before {
+            content: '';
+            position: absolute;
+            top: 0; 
+            left: -100%;
+            width: 50%; 
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 185, 0.2), transparent);
+            transition: left 0.7s ease;
+        }
+
+        .category-title:hover {
+            transform: translateY(-5px) scale(1.02);
+            border-color: var(--siemens-cyan);
             color: var(--siemens-cyan);
-            border-left: 4px solid var(--siemens-cyan);
-            padding-left: 1rem;
+            background: rgba(0, 255, 185, 0.08);
+            box-shadow: 0 15px 40px rgba(0, 255, 185, 0.2), 0 0 20px rgba(0, 255, 185, 0.1);
+            text-shadow: 0 0 15px rgba(0, 255, 185, 0.4);
+        }
+
+        .category-title:hover::before {
+            left: 200%; /* Triggers the shine to sweep across the button */
         }
 
         /* ==========================================
-           5. IOS LIQUID GLASS PANELS 
+           5. IOS LIQUID GLASS PANELS (FLUID WIDTH)
            ========================================== */
         .software-section {
             padding: 2.5rem;
             margin: 2rem auto;
-            max-width: 1000px;
+            width: 88%;
+            max-width: 1400px;
             background: var(--glass-bg);
             border-radius: 24px;
             border: 1px solid rgba(255, 255, 255, 0.05);
@@ -366,7 +403,7 @@
 
         /* Mobile Layout Adjustments */
         @media (max-width: 900px) {
-            .software-section { padding: 1.5rem; margin: 1.5rem 1rem; border-radius: 20px; }
+            .software-section { padding: 1.5rem; margin: 1.5rem auto; width: 88%; border-radius: 20px; }
             .section-header h2 { font-size: 1.6rem; }
             .brand-logo { height: 40px; width: 40px; }
             header { padding: 4rem 1.5rem 3rem 1.5rem; }
@@ -383,6 +420,10 @@
             .profile-center {
                 order: -1; 
                 width: 100%;
+            }
+            .category-title {
+                padding: 1rem 2rem;
+                font-size: 1.2rem;
             }
         }
     </style>
@@ -468,7 +509,7 @@
 
     <section id="nx" class="software-section">
         <div class="section-header">
-            <img src="https://cdn.worldvectorlogo.com/logos/nx-cad-cam.svg" alt="Siemens NX Logo" class="brand-logo">
+            <img src="NX.png" alt="Siemens NX Logo" class="brand-logo">
             <h2><span class="highlight">Siemens NX</span> Portfolio</h2>
         </div>
         <div class="cert-card">
