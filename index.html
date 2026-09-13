@@ -6,24 +6,25 @@
     <title>Moemen AbdulHalim Salaam | Portfolio</title>
     <style>
         /* ==========================================
-           1. CORE VARIABLES & SETUP
+           1. CORE VARIABLES & SETUP (SIEMENS IDENTITY)
            ========================================== */
         :root {
             /* Siemens Master Branding */
-            --siemens-bg-dark: #050808; /* Deep almost-black petrol */
-            --siemens-teal: #009999;
-            --siemens-cyan: #00ffcc;
-            --grad-siemens: linear-gradient(135deg, var(--siemens-cyan), var(--siemens-teal));
-
-            /* iOS Glass / Translucency */
-            --glass-bg: rgba(20, 25, 25, 0.45); /* Tinted slightly teal for cohesion */
-            --glass-border: rgba(0, 255, 204, 0.15); /* Subtle cyan glass edge */
-            --glass-highlight: rgba(0, 255, 204, 0.25);
+            --siemens-navy: #000028; 
+            --siemens-cyan: #00ffb9; 
+            --siemens-teal: #008080;
+            --xcelerator-purple: #3a2b58; 
             
-            /* Material Expressive Vibrant Gradients (for individual cards) */
+            /* iOS Glass / Translucency */
+            --glass-bg: rgba(255, 255, 255, 0.02); 
+            --glass-border: rgba(0, 255, 185, 0.15); 
+            --glass-highlight: rgba(0, 255, 185, 0.4);
+            
+            /* Gradients */
+            --grad-siemens: linear-gradient(135deg, var(--siemens-cyan), var(--siemens-teal));
             --grad-sw: linear-gradient(135deg, #ff3b30, #a00000);
             --grad-catia: linear-gradient(135deg, #0a84ff, #003388);
-            --grad-nx: linear-gradient(135deg, #32ade6, #005a75);
+            --grad-nx: linear-gradient(135deg, var(--siemens-cyan), var(--siemens-teal));
             
             --grad-microstation: linear-gradient(135deg, #007377, #004d4f); 
             --grad-openbuildings: linear-gradient(135deg, #607d8b, #37474f); 
@@ -34,19 +35,19 @@
             
             /* Text Colors */
             --text-main: #ffffff;
-            --text-muted: #c4d4d4; /* Slightly teal-tinted muted text */
+            --text-muted: #787878; 
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Product Sans", Roboto, Helvetica, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             -webkit-font-smoothing: antialiased;
         }
 
         body {
-            background-color: var(--siemens-bg-dark);
+            background-color: var(--siemens-navy);
             color: var(--text-main);
             line-height: 1.6;
             overflow-x: hidden;
@@ -61,115 +62,212 @@
             top: 0; left: 0; width: 100vw; height: 100vh;
             z-index: -1;
             overflow: hidden;
-            background: var(--siemens-bg-dark);
+            background: var(--siemens-navy);
         }
 
         .orb {
             position: absolute;
             border-radius: 50%;
-            filter: blur(140px);
-            opacity: 0.5;
-            animation: float 20s infinite ease-in-out alternate;
+            filter: blur(150px);
+            opacity: 0.6;
+            animation: float 25s infinite ease-in-out alternate;
         }
 
-        /* Ambient Siemens Glows */
-        .orb-1 { width: 55vw; height: 55vw; background: rgba(0, 255, 204, 0.15); top: -10%; left: -10%; }
-        .orb-2 { width: 45vw; height: 45vw; background: rgba(0, 153, 153, 0.25); bottom: 5%; right: -10%; animation-delay: -7s; }
-        .orb-3 { width: 40vw; height: 40vw; background: rgba(0, 77, 77, 0.4); top: 30%; left: 25%; animation-delay: -12s; }
+        .orb-1 { width: 60vw; height: 60vw; background: rgba(0, 255, 185, 0.12); top: -20%; left: -10%; }
+        .orb-2 { width: 50vw; height: 50vw; background: rgba(58, 43, 88, 0.4); bottom: 0%; right: -10%; animation-delay: -5s; }
+        .orb-3 { width: 40vw; height: 40vw; background: rgba(0, 128, 128, 0.2); top: 40%; left: 30%; animation-delay: -12s; }
 
         @keyframes float {
             0% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(4%, 8%) scale(1.05); }
-            100% { transform: translate(-4%, -8%) scale(0.95); }
+            50% { transform: translate(3%, 6%) scale(1.05); }
+            100% { transform: translate(-3%, -6%) scale(0.95); }
         }
 
         /* ==========================================
-           3. HEADER
+           3. HEADER (FLEXBOX ALIGNMENT)
            ========================================== */
         header {
-            text-align: center;
-            padding: 8rem 2rem 4rem 2rem;
-            max-width: 900px;
-            margin: 0 auto;
             position: relative;
+            width: 100%;
+            padding: 4rem 1rem 5rem 1rem;
             z-index: 10;
         }
 
-        header h1 {
-            font-size: clamp(2.5rem, 6vw, 4rem);
-            font-weight: 800;
-            letter-spacing: -1px;
-            margin-bottom: 1.5rem;
-            background: var(--grad-siemens);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 40px rgba(0, 255, 204, 0.2);
+        /* Top row handles the far edges + dead center Y-alignment */
+        .hero-top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto 2rem auto;
+            padding: 0 2rem;
         }
 
-        header p {
+        .qr-side {
+            flex: 1;
+            display: flex;
+        }
+        
+        .qr-side.left {
+            justify-content: flex-start;
+        }
+        
+        .qr-side.right {
+            justify-content: flex-end;
+        }
+
+        .profile-center {
+            flex: 0 0 auto;
+            display: flex;
+            justify-content: center;
+        }
+
+        .header-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* QR Codes Styles */
+        .qr-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 9px;
+            border-radius: 8px;
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            text-decoration: none;
+        }
+
+        .qr-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--glass-highlight);
+            box-shadow: 0 15px 40px rgba(0, 255, 185, 0.25);
+        }
+
+        .qr-wrapper {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .qr-wrapper img:first-child {
+            width: 125px;
+            height: 125px;
+            border-radius: 0; 
+            background: #fff;
+            display: block;
+        }
+
+        /* Center Icon inside QR */
+        .qr-center-icon {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: #ffffff;
+            border-radius: 6px;
+            padding: 0px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+            z-index: 2;
+        }
+
+        /* Transparent Profile Picture */
+        .profile-pic {
+            width: 215px;
+            height: auto;
+            display: block;
+            margin-bottom: 2rem;
+            /* Drop-shadow is used instead of box-shadow to contour to your transparent image! */
+            transition: transform 0.3s ease, filter 0.3s ease;
+            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.4));
+        }
+
+        .profile-pic:hover {
+            /* Scales slightly in place without shifting its Y-axis position */
+            transform: scale(1.5); 
+            /* Creates a centralized, balanced cyan glow */
+            filter: drop-shadow(0 0 30px rgba(0, 255, 185, 0.4)); 
+        }
+
+        /* Main Name Typography */
+        .header-content h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            color: var(--siemens-cyan); 
+            text-shadow: 0 0 30px rgba(0, 255, 185, 0.3); 
+        }
+
+        .header-content p {
             color: var(--text-muted);
-            font-size: 1.15rem;
+            font-size: 1.2rem;
             font-weight: 400;
             max-width: 800px;
-            margin: 0 auto;
-            line-height: 1.8;
+            line-height: 1.7;
         }
 
         /* ==========================================
            4. CATEGORY HEADERS
            ========================================== */
         .category-wrapper {
-            text-align: center;
-            margin: 5rem 0 2rem 0;
+            max-width: 1000px;
+            margin: 4rem auto 2rem auto;
+            padding: 0 2rem;
             position: relative;
             z-index: 10;
         }
 
         .category-title {
-            display: inline-block;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 700;
-            padding: 0.8rem 2.5rem;
-            border-radius: 50px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 15px rgba(0, 255, 204, 0.1);
+            letter-spacing: 3px;
+            font-weight: 600;
             color: var(--siemens-cyan);
+            border-left: 4px solid var(--siemens-cyan);
+            padding-left: 1rem;
         }
 
         /* ==========================================
-           5. IOS LIQUID GLASS PANELS
+           5. IOS LIQUID GLASS PANELS 
            ========================================== */
         .software-section {
             padding: 2.5rem;
             margin: 2rem auto;
             max-width: 1000px;
             background: var(--glass-bg);
-            border-radius: 32px;
+            border-radius: 24px;
             border: 1px solid rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
             position: relative;
             z-index: 10;
             transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         .software-section:hover {
-            transform: translateY(-8px) scale(1.01);
-            background: rgba(30, 40, 40, 0.5);
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.04);
             border: 1px solid var(--glass-highlight);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7), 0 0 30px rgba(0, 255, 204, 0.1), inset 0 1px 0 rgba(255,255,255,0.1);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(0, 255, 185, 0.05);
         }
 
         .section-header {
             display: flex;
             align-items: center;
-            margin-bottom: 2.5rem;
+            margin-bottom: 2rem;
         }
 
         .brand-logo {
@@ -179,13 +277,12 @@
             margin-right: 1.5rem;
             background: #fff;
             padding: 6px;
-            border-radius: 14px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            border-radius: 12px;
         }
 
         .section-header h2 {
-            font-size: 2.2rem;
-            font-weight: 700;
+            font-size: 2rem;
+            font-weight: 600;
             letter-spacing: -0.5px;
         }
 
@@ -193,7 +290,7 @@
         .highlight {
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            font-weight: 800;
+            font-weight: 700;
         }
         #solidworks .highlight { background-image: var(--grad-sw); }
         #catia .highlight { background-image: var(--grad-catia); }
@@ -210,10 +307,10 @@
            6. CERTIFICATION CARDS
            ========================================== */
         .cert-card {
-            background: rgba(0, 0, 0, 0.25);
+            background: rgba(0, 0, 0, 0.3);
             padding: 2rem;
-            border-radius: 20px;
-            margin-bottom: 1.5rem;
+            border-radius: 16px;
+            margin-bottom: 1rem;
             border: 1px solid transparent;
             position: relative;
             overflow: hidden;
@@ -223,8 +320,8 @@
         .cert-card::before {
             content: "";
             position: absolute;
-            left: 0; top: 0; bottom: 0; width: 4px;
-            background: rgba(255,255,255,0.05);
+            left: 0; top: 0; bottom: 0; width: 3px;
+            background: rgba(255,255,255,0.1);
             transition: width 0.3s ease;
         }
 
@@ -242,8 +339,8 @@
 
         .cert-card:hover {
             background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(0, 255, 204, 0.15);
-            transform: translateX(5px);
+            border: 1px solid rgba(0, 255, 185, 0.2);
+            transform: translateX(4px);
         }
 
         .cert-card h3 {
@@ -267,10 +364,26 @@
             z-index: 10;
         }
 
-        @media (max-width: 768px) {
-            .software-section { padding: 1.5rem; margin: 1.5rem 1rem; border-radius: 24px; }
+        /* Mobile Layout Adjustments */
+        @media (max-width: 900px) {
+            .software-section { padding: 1.5rem; margin: 1.5rem 1rem; border-radius: 20px; }
             .section-header h2 { font-size: 1.6rem; }
             .brand-logo { height: 40px; width: 40px; }
+            header { padding: 4rem 1.5rem 3rem 1.5rem; }
+            
+            /* Stacks the QRs and profile picture neatly on mobile screens */
+            .hero-top-row {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1.5rem;
+            }
+            .qr-side {
+                flex: 0 0 auto;
+            }
+            .profile-center {
+                order: -1; 
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -283,8 +396,41 @@
     </div>
 
     <header>
-        <h1>Moemen AbdulHalim Salaam</h1>
-        <p>Mechanical Engineering Student, Siemens DISW Ambassador, Certified SOLIDWORKS Expert with 2+ years of hands-on experience in Rolling Stock and Railways. Have a solid foundation in Mechanical Design, CAD, Manufacturing, Quality Control, and Plant O&M.</p>
+        <!-- Top Row containing QRs and Profile Pic aligned on the same Y-axis -->
+        <div class="hero-top-row">
+            
+            <!-- Clickable Linktree QR (Far Left) -->
+            <div class="qr-side left">
+                <a href="https://linktr.ee/Momen.Sa" target="_blank" class="qr-card">
+                    <div class="qr-wrapper">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://linktr.ee/Momen.Sa" alt="Linktree QR">
+                        <img src="https://img.icons8.com/color/48/linktree.png" class="qr-center-icon" alt="Linktree Icon">
+                    </div>
+                </a>
+            </div>
+
+            <!-- Profile Picture (Dead Center) -->
+            <div class="profile-center">
+                <img src="image.png" alt="Moemen Salaam" class="profile-pic">
+            </div>
+
+            <!-- Clickable LinkedIn QR (Far Right) -->
+            <div class="qr-side right">
+                <a href="https://linkedin.com/in/MomenSalaam" target="_blank" class="qr-card">
+                    <div class="qr-wrapper">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://linkedin.com/in/MomenSalaam" alt="LinkedIn QR">
+                        <img src="https://img.icons8.com/color/48/linkedin.png" class="qr-center-icon" alt="LinkedIn Icon">
+                    </div>
+                </a>
+            </div>
+            
+        </div>
+
+        <!-- Main Centered Content -->
+        <div class="header-content">
+            <h1>Moemen AbdulHalim Salaam</h1>
+            <p>Mechanical Engineering Student, Siemens DISW Ambassador, Certified SOLIDWORKS Expert with 2+ years of hands-on experience in Rolling Stock and Railways. Have a solid foundation in Mechanical Design, CAD, Manufacturing, Quality Control, and Plant O&M.</p>
+        </div>
     </header>
 
     <!-- ========================================== -->
@@ -417,7 +563,7 @@
     </section>
 
     <footer>
-        <p>&copy; 2026 Moemen AbdulHalim Salaam. Designed with Liquid iOS & Siemens Identity.</p>
+        <p>&copy; 2026 Moemen AbdulHalim Salaam. Designed with Liquid iOS & Siemens Corporate Identity.</p>
     </footer>
 
 </body>
