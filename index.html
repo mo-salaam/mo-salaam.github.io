@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moemen AbdulHalim Salaam | Portfolio</title>
+    <style>
+        /* ==========================================
+           1. CORE VARIABLES & SETUP
+           ========================================== */
+        :root {
+            /* Siemens Master Branding */
+            --siemens-bg-dark: #050808; /* Deep almost-black petrol */
+            --siemens-teal: #009999;
+            --siemens-cyan: #00ffcc;
+            --grad-siemens: linear-gradient(135deg, var(--siemens-cyan), var(--siemens-teal));
+
+            /* iOS Glass / Translucency */
+            --glass-bg: rgba(20, 25, 25, 0.45); /* Tinted slightly teal for cohesion */
+            --glass-border: rgba(0, 255, 204, 0.15); /* Subtle cyan glass edge */
+            --glass-highlight: rgba(0, 255, 204, 0.25);
+            
+            /* Material Expressive Vibrant Gradients (for individual cards) */
+            --grad-sw: linear-gradient(135deg, #ff3b30, #a00000);
+            --grad-catia: linear-gradient(135deg, #0a84ff, #003388);
+            --grad-nx: linear-gradient(135deg, #32ade6, #005a75);
+            
+            --grad-microstation: linear-gradient(135deg, #007377, #004d4f); 
+            --grad-openbuildings: linear-gradient(135deg, #607d8b, #37474f); 
+            --grad-watercad: linear-gradient(135deg, #00bfff, #005c8a); 
+            --grad-openplant: linear-gradient(135deg, #4caf50, #1b5e20); 
+            
+            --grad-railways: linear-gradient(135deg, #ff9f0a, #d15600);
+            
+            /* Text Colors */
+            --text-main: #ffffff;
+            --text-muted: #c4d4d4; /* Slightly teal-tinted muted text */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Product Sans", Roboto, Helvetica, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--siemens-bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* ==========================================
+           2. SIEMENS AMBIENT BACKGROUND 
+           ========================================== */
+        .ambient-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            background: var(--siemens-bg-dark);
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(140px);
+            opacity: 0.5;
+            animation: float 20s infinite ease-in-out alternate;
+        }
+
+        /* Ambient Siemens Glows */
+        .orb-1 { width: 55vw; height: 55vw; background: rgba(0, 255, 204, 0.15); top: -10%; left: -10%; }
+        .orb-2 { width: 45vw; height: 45vw; background: rgba(0, 153, 153, 0.25); bottom: 5%; right: -10%; animation-delay: -7s; }
+        .orb-3 { width: 40vw; height: 40vw; background: rgba(0, 77, 77, 0.4); top: 30%; left: 25%; animation-delay: -12s; }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(4%, 8%) scale(1.05); }
+            100% { transform: translate(-4%, -8%) scale(0.95); }
+        }
+
+        /* ==========================================
+           3. HEADER
+           ========================================== */
+        header {
+            text-align: center;
+            padding: 8rem 2rem 4rem 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        header h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 1.5rem;
+            background: var(--grad-siemens);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 40px rgba(0, 255, 204, 0.2);
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1.15rem;
+            font-weight: 400;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        /* ==========================================
+           4. CATEGORY HEADERS
+           ========================================== */
+        .category-wrapper {
+            text-align: center;
+            margin: 5rem 0 2rem 0;
+            position: relative;
+            z-index: 10;
+        }
+
+        .category-title {
+            display: inline-block;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+            padding: 0.8rem 2.5rem;
+            border-radius: 50px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 15px rgba(0, 255, 204, 0.1);
+            color: var(--siemens-cyan);
+        }
+
+        /* ==========================================
+           5. IOS LIQUID GLASS PANELS
+           ========================================== */
+        .software-section {
+            padding: 2.5rem;
+            margin: 2rem auto;
+            max-width: 1000px;
+            background: var(--glass-bg);
+            border-radius: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+            position: relative;
+            z-index: 10;
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .software-section:hover {
+            transform: translateY(-8px) scale(1.01);
+            background: rgba(30, 40, 40, 0.5);
+            border: 1px solid var(--glass-highlight);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7), 0 0 30px rgba(0, 255, 204, 0.1), inset 0 1px 0 rgba(255,255,255,0.1);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .brand-logo {
+            height: 48px;
+            width: 48px;
+            object-fit: contain;
+            margin-right: 1.5rem;
+            background: #fff;
+            padding: 6px;
+            border-radius: 14px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+
+        .section-header h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        /* Text Gradients */
+        .highlight {
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
+        #solidworks .highlight { background-image: var(--grad-sw); }
+        #catia .highlight { background-image: var(--grad-catia); }
+        #nx .highlight { background-image: var(--grad-nx); }
+        
+        #microstation .highlight { background-image: var(--grad-microstation); }
+        #openbuildings .highlight { background-image: var(--grad-openbuildings); }
+        #watercad .highlight { background-image: var(--grad-watercad); }
+        #openplant .highlight { background-image: var(--grad-openplant); }
+        
+        #railways .highlight { background-image: var(--grad-railways); }
+
+        /* ==========================================
+           6. CERTIFICATION CARDS
+           ========================================== */
+        .cert-card {
+            background: rgba(0, 0, 0, 0.25);
+            padding: 2rem;
+            border-radius: 20px;
+            margin-bottom: 1.5rem;
+            border: 1px solid transparent;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .cert-card::before {
+            content: "";
+            position: absolute;
+            left: 0; top: 0; bottom: 0; width: 4px;
+            background: rgba(255,255,255,0.05);
+            transition: width 0.3s ease;
+        }
+
+        /* Hover Lines */
+        #solidworks .cert-card:hover::before { background: var(--grad-sw); width: 6px; }
+        #catia .cert-card:hover::before { background: var(--grad-catia); width: 6px; }
+        #nx .cert-card:hover::before { background: var(--grad-nx); width: 6px; }
+        
+        #microstation .cert-card:hover::before { background: var(--grad-microstation); width: 6px; }
+        #openbuildings .cert-card:hover::before { background: var(--grad-openbuildings); width: 6px; }
+        #watercad .cert-card:hover::before { background: var(--grad-watercad); width: 6px; }
+        #openplant .cert-card:hover::before { background: var(--grad-openplant); width: 6px; }
+        
+        #railways .cert-card:hover::before { background: var(--grad-railways); width: 6px; }
+
+        .cert-card:hover {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(0, 255, 204, 0.15);
+            transform: translateX(5px);
+        }
+
+        .cert-card h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            color: var(--text-main);
+        }
+
+        .cert-card p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 4rem 1rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        @media (max-width: 768px) {
+            .software-section { padding: 1.5rem; margin: 1.5rem 1rem; border-radius: 24px; }
+            .section-header h2 { font-size: 1.6rem; }
+            .brand-logo { height: 40px; width: 40px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-bg">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <header>
+        <h1>Moemen AbdulHalim Salaam</h1>
+        <p>Mechanical Engineering Student, Siemens DISW Ambassador, Certified SOLIDWORKS Expert with 2+ years of hands-on experience in Rolling Stock and Railways. Have a solid foundation in Mechanical Design, CAD, Manufacturing, Quality Control, and Plant O&M.</p>
+    </header>
+
+    <!-- ========================================== -->
+    <!-- CATEGORY 1: MECHANICAL DESIGN              -->
+    <!-- ========================================== -->
+    <div class="category-wrapper">
+        <h2 class="category-title">Mechanical Design</h2>
+    </div>
+
+    <section id="solidworks" class="software-section">
+        <div class="section-header">
+            <img src="https://img.icons8.com/color/1200/solidworks.jpg" alt="SOLIDWORKS Logo" class="brand-logo">
+            <h2><span class="highlight">SOLIDWORKS</span> Journey</h2>
+        </div>
+        <div class="cert-card">
+            <h3>Certified SOLIDWORKS Expert</h3>
+            <p>Demonstrated highest-level proficiency in advanced part modeling, complex assembly configurations, and robust parametric design within the Dassault Systèmes ecosystem.</p>
+        </div>
+    </section>
+
+    <section id="catia" class="software-section">
+        <div class="section-header">
+            <img src="https://www.sty-fun.com/wp-content/uploads/2024/05/DS-CATIA-Logo-1.png" alt="CATIA Logo" class="brand-logo">
+            <h2><span class="highlight">CATIA</span> Certifications & Training</h2>
+        </div>
+        <div class="cert-card">
+            <h3>Certified CATIA Sheet Metal Designer Professional</h3>
+            <p>Specialized expertise in complex sheet metal design, generative shape design, and unfolding manufacturing requirements utilizing Dassault Systèmes advanced surfacing tools.</p>
+        </div>
+        <div class="cert-card">
+            <h3>Official Training Validation</h3>
+            <p>Completed comprehensive, formal training pathways emphasizing aerospace and automotive standard practices in CATIA V5/3DEXPERIENCE environments.</p>
+        </div>
+    </section>
+
+    <section id="nx" class="software-section">
+        <div class="section-header">
+            <img src="https://cdn.worldvectorlogo.com/logos/nx-cad-cam.svg" alt="Siemens NX Logo" class="brand-logo">
+            <h2><span class="highlight">Siemens NX</span> Portfolio</h2>
+        </div>
+        <div class="cert-card">
+            <h3>Siemens NX Design Certified Associate</h3>
+            <p>Awarded February 2026. Validated foundational and advanced mechanical design, master modeling concepts, and synchronized technology workflows.</p>
+        </div>
+        <div class="cert-card">
+            <h3>Siemens Student Ambassador Expert</h3>
+            <p>Active since May 2025 within the Siemens global academic team. Championing the adoption and technical mastery of Siemens Digital Industries Software platforms among peers.</p>
+        </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- CATEGORY 2: INFRASTRUCTURE DESIGN          -->
+    <!-- ========================================== -->
+    <div class="category-wrapper">
+        <h2 class="category-title">Infrastructure Design</h2>
+    </div>
+
+    <!-- MicroStation Section -->
+    <section id="microstation" class="software-section">
+        <div class="section-header">
+            <img src="https://gpradfprodeussa01.blob.core.windows.net/producticons/producticons/1000.svg" alt="MicroStation Logo" class="brand-logo">
+            <h2><span class="highlight">MicroStation</span></h2>
+        </div>
+        <div class="cert-card">
+            <h3>Accredited MicroStation Professional</h3>
+            <p>Advanced proficiency in 2D and 3D infrastructure design, drafting, and modeling utilizing Bentley's comprehensive MicroStation environment.</p>
+        </div>
+    </section>
+
+    <!-- OpenBuildings Designer Section -->
+    <section id="openbuildings" class="software-section">
+        <div class="section-header">
+            <img src="https://gpradfprodeussa01.blob.core.windows.net/producticons/producticons/1934.svg" alt="OpenBuildings Logo" class="brand-logo">
+            <h2><span class="highlight">OpenBuildings Designer</span></h2>
+        </div>
+        <div class="cert-card">
+            <h3>Accredited OpenBuildings Professional</h3>
+            <p>Specialized in multidisciplinary building design, BIM workflows, and architectural/structural simulations tailored for complex infrastructure projects.</p>
+        </div>
+    </section>
+
+    <!-- WaterCAD Section -->
+    <section id="watercad" class="software-section">
+        <div class="section-header">
+            <img src="https://gpradfprodeussa01.blob.core.windows.net/producticons/producticons/1225.svg" alt="WaterCAD Logo" class="brand-logo" style="background: white;">
+            <h2><span class="highlight">WaterCAD</span></h2>
+        </div>
+        <div class="cert-card">
+            <h3>WaterCAD Proficiency</h3>
+            <p>Applied knowledge in hydraulic modeling, water distribution analysis, and infrastructure planning.</p>
+        </div>
+    </section>
+
+    <!-- OpenPlant Section -->
+    <section id="openplant" class="software-section">
+        <div class="section-header">
+            <img src="https://gpradfprodeussa01.blob.core.windows.net/producticons/producticons/1830.svg" alt="OpenPlant Logo" class="brand-logo">
+            <h2><span class="highlight">OpenPlant</span></h2>
+        </div>
+        <div class="cert-card">
+            <h3>OpenPlant Modeler</h3>
+            <p>Proficiency in 3D plant design, piping systems, and intelligent P&ID creation for industrial scale infrastructure and process manufacturing facilities.</p>
+        </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- CATEGORY 3: ROLLING STOCK & RAILWAYS       -->
+    <!-- ========================================== -->
+    <div class="category-wrapper">
+        <h2 class="category-title">Rolling Stock & Railways</h2>
+    </div>
+
+    <section id="railways" class="software-section">
+        <div class="section-header">
+            <img src="https://img.icons8.com/ios-filled/100/1a1a1c/train.png" alt="Railway Icon" class="brand-logo">
+            <h2><span class="highlight">Railway Engineering</span> & Ops</h2>
+        </div>
+        <div class="cert-card">
+            <h3>Assistant Locomotive Operator - Egyptian National Railways</h3>
+            <p>Over two years of hands-on experience alongside senior operators. Executed mainline rolling stock operations, mechanical diagnostics, and safety protocols within a high-stakes transportation environment.</p>
+        </div>
+        <div class="cert-card">
+            <h3>Siemens Immersive Design Challenge</h3>
+            <p>Developed an innovative retrofit concept for railway coaches, integrating flexible CIGS solar panels to enhance energy efficiency and sustainability in modern rail transit systems.</p>
+        </div>
+        <div class="cert-card">
+            <h3>Locomotive Technical Analysis</h3>
+            <p>Extensive study of mechanical layouts, electrical systems, and diesel engine series (such as EMD 645/710 and GE GEVO) across platforms including EMD, GE Transportation (Wabtec), Alstom, Adtranz, and Henschel.</p>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Moemen AbdulHalim Salaam. Designed with Liquid iOS & Siemens Identity.</p>
+    </footer>
+
+</body>
+</html>
