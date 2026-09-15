@@ -4,36 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Moemen AbdulHalim Salaam | Portfolio</title>
+
+    <!-- PDF.js Library for Custom PDF Rendering -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+    <script>
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+    </script>
+
     <style>
         /* ==========================================
            1. CORE VARIABLES & SETUP (SIEMENS IDENTITY)
            ========================================== */
         :root {
-            /* Siemens Master Branding */
             --siemens-navy: #000028; 
             --siemens-cyan: #00ffb9; 
             --siemens-teal: #008080;
             --xcelerator-purple: #3a2b58; 
-            
-            /* iOS Glass / Translucency */
+
             --glass-bg: rgba(255, 255, 255, 0.02); 
             --glass-border: rgba(0, 255, 185, 0.15); 
             --glass-highlight: rgba(0, 255, 185, 0.4);
-            
-            /* Gradients */
+
             --grad-siemens: linear-gradient(135deg, var(--siemens-cyan), var(--siemens-teal));
             --grad-sw: linear-gradient(135deg, #ff3b30, #a00000);
             --grad-catia: linear-gradient(135deg, #0a84ff, #003388);
             --grad-nx: linear-gradient(135deg, var(--siemens-cyan), var(--siemens-teal));
-            
             --grad-microstation: linear-gradient(135deg, #007377, #004d4f); 
             --grad-openbuildings: linear-gradient(135deg, #607d8b, #37474f); 
             --grad-watercad: linear-gradient(135deg, #00bfff, #005c8a); 
             --grad-openplant: linear-gradient(135deg, #4caf50, #1b5e20); 
-            
             --grad-railways: linear-gradient(135deg, #ff9f0a, #d15600);
-            
-            /* Text Colors */
+
             --text-main: #ffffff;
             --text-muted: #787878; 
         }
@@ -84,7 +85,7 @@
         }
 
         /* ==========================================
-           3. HEADER (FLEXBOX ALIGNMENT)
+           3. HEADER
            ========================================== */
         header {
             position: relative;
@@ -93,7 +94,6 @@
             z-index: 10;
         }
 
-        /* Top row handles the far edges + dead center Y-alignment */
         .hero-top-row {
             display: flex;
             justify-content: space-between;
@@ -104,24 +104,10 @@
             padding: 0 2rem;
         }
 
-        .qr-side {
-            flex: 1;
-            display: flex;
-        }
-        
-        .qr-side.left {
-            justify-content: flex-start;
-        }
-        
-        .qr-side.right {
-            justify-content: flex-end;
-        }
-
-        .profile-center {
-            flex: 0 0 auto;
-            display: flex;
-            justify-content: center;
-        }
+        .qr-side { flex: 1; display: flex; }
+        .qr-side.left { justify-content: flex-start; }
+        .qr-side.right { justify-content: flex-end; }
+        .profile-center { flex: 0 0 auto; display: flex; justify-content: center; }
 
         .header-content {
             width: 88%;
@@ -133,7 +119,6 @@
             align-items: center;
         }
 
-        /* QR Codes Styles */
         .qr-card {
             background: rgba(255, 255, 255, 0.05);
             padding: 12px;
@@ -170,7 +155,6 @@
             display: block;
         }
 
-        /* Center Icon inside QR */
         .qr-center-icon {
             position: absolute;
             width: 23px;
@@ -182,7 +166,6 @@
             z-index: 2;
         }
 
-        /* Transparent Profile Picture */
         .profile-pic {
             width: 215px;
             height: auto;
@@ -197,7 +180,6 @@
             filter: drop-shadow(0 0 30px rgba(0, 255, 185, 0.4)); 
         }
 
-        /* Main Name Typography */
         .header-content h1 {
             font-size: clamp(2.5rem, 6vw, 4rem);
             font-weight: 800;
@@ -217,7 +199,7 @@
         }
 
         /* ==========================================
-           4. CATEGORY HEADERS (INTERACTIVE & BIG)
+           4. CATEGORY HEADERS
            ========================================== */
         .category-wrapper {
             width: 88%;
@@ -250,14 +232,10 @@
             cursor: default;
         }
 
-        /* Sweeping shine effect */
         .category-title::before {
             content: '';
             position: absolute;
-            top: 0; 
-            left: -100%;
-            width: 50%; 
-            height: 100%;
+            top: 0; left: -100%; width: 50%; height: 100%;
             background: linear-gradient(90deg, transparent, rgba(0, 255, 185, 0.2), transparent);
             transition: left 0.7s ease;
         }
@@ -271,12 +249,10 @@
             text-shadow: 0 0 15px rgba(0, 255, 185, 0.4);
         }
 
-        .category-title:hover::before {
-            left: 200%; /* Triggers the shine to sweep across the button */
-        }
+        .category-title:hover::before { left: 200%; }
 
         /* ==========================================
-           5. IOS LIQUID GLASS PANELS (FLUID WIDTH)
+           5. IOS LIQUID GLASS PANELS
            ========================================== */
         .software-section {
             padding: 2.5rem;
@@ -308,36 +284,20 @@
         }
 
         .brand-logo {
-            height: 48px;
-            width: 48px;
-            object-fit: contain;
-            margin-right: 1.5rem;
-            background: #fff;
-            padding: 6px;
-            border-radius: 12px;
+            height: 48px; width: 48px; object-fit: contain;
+            margin-right: 1.5rem; background: #fff; padding: 6px; border-radius: 12px;
         }
 
-        .section-header h2 {
-            font-size: 2rem;
-            font-weight: 600;
-            letter-spacing: -0.5px;
-        }
+        .section-header h2 { font-size: 2rem; font-weight: 600; letter-spacing: -0.5px; }
 
-        /* Text Gradients */
-        .highlight {
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: 700;
-        }
+        .highlight { -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 700; }
         #solidworks .highlight { background-image: var(--grad-sw); }
         #catia .highlight { background-image: var(--grad-catia); }
         #nx .highlight { background-image: var(--grad-nx); }
-        
         #microstation .highlight { background-image: var(--grad-microstation); }
         #openbuildings .highlight { background-image: var(--grad-openbuildings); }
         #watercad .highlight { background-image: var(--grad-watercad); }
         #openplant .highlight { background-image: var(--grad-openplant); }
-        
         #railways .highlight { background-image: var(--grad-railways); }
 
         /* ==========================================
@@ -356,22 +316,18 @@
 
         .cert-card::before {
             content: "";
-            position: absolute;
-            left: 0; top: 0; bottom: 0; width: 3px;
+            position: absolute; top: 0; left: 0; bottom: 0; width: 3px;
             background: rgba(255,255,255,0.1);
             transition: width 0.3s ease;
         }
 
-        /* Hover Lines */
         #solidworks .cert-card:hover::before { background: var(--grad-sw); width: 6px; }
         #catia .cert-card:hover::before { background: var(--grad-catia); width: 6px; }
         #nx .cert-card:hover::before { background: var(--grad-nx); width: 6px; }
-        
         #microstation .cert-card:hover::before { background: var(--grad-microstation); width: 6px; }
         #openbuildings .cert-card:hover::before { background: var(--grad-openbuildings); width: 6px; }
         #watercad .cert-card:hover::before { background: var(--grad-watercad); width: 6px; }
         #openplant .cert-card:hover::before { background: var(--grad-openplant); width: 6px; }
-        
         #railways .cert-card:hover::before { background: var(--grad-railways); width: 6px; }
 
         .cert-card:hover {
@@ -380,51 +336,89 @@
             transform: translateX(4px);
         }
 
-        .cert-card h3 {
-            font-size: 1.3rem;
-            font-weight: 600;
-            margin-bottom: 0.8rem;
-            color: var(--text-main);
+        .cert-card h3 { font-size: 1.3rem; font-weight: 600; margin-bottom: 0.8rem; color: var(--text-main); }
+        .cert-card p { color: var(--text-muted); font-size: 1.05rem; }
+
+        /* ==========================================
+           7. CUSTOM PDF VIEWER & BADGE STYLES
+           ========================================== */
+        .badges-row {
+            display: flex; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1rem;
+        }
+        
+        .badge-card {
+            flex: 1; min-width: 300px; display: flex; align-items: center; gap: 1.5rem; margin-bottom: 0; padding: 1.5rem;
         }
 
-        .cert-card p {
-            color: var(--text-muted);
-            font-size: 1.05rem;
+        .badge-img { width: 70px; height: 70px; object-fit: contain; }
+
+        .project-list {
+            margin-left: 1.8rem; margin-bottom: 1rem; color: var(--text-muted); font-size: 1.05rem;
+        }
+        .project-list li { margin-bottom: 0.5rem; }
+
+        /* PDF CUSTOM STYLES - PAGE BY PAGE FITTING */
+        .pdf-wrapper-container {
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+            margin-top: 2rem;
+            display: flex;
+            flex-direction: column;
         }
 
-        footer {
-            text-align: center;
-            padding: 4rem 1rem;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            position: relative;
-            z-index: 10;
+        .pdf-toolbar {
+            display: flex; justify-content: space-between; align-items: center; padding: 1rem;
+            background: rgba(0, 255, 185, 0.05); border-bottom: 1px solid var(--glass-border);
+            flex-wrap: wrap; gap: 1rem;
         }
 
-        /* Mobile Layout Adjustments */
+        .pdf-controls {
+            display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;
+        }
+
+        .pdf-btn {
+            background: transparent; border: 1px solid var(--glass-border); color: var(--text-main);
+            padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; transition: all 0.3s ease;
+            font-weight: 600; font-size: 0.9rem; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        }
+
+        .pdf-btn:hover {
+            background: rgba(0, 255, 185, 0.1); border-color: var(--siemens-cyan); box-shadow: 0 0 10px rgba(0, 255, 185, 0.2);
+        }
+
+        .pdf-canvas-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            background: #1e1e1e;
+            padding: 1.5rem;
+            box-sizing: border-box;
+        }
+
+        /* This ensures the PDF fits the screen width and does not scroll */
+        #pdf-render {
+            width: 100%;
+            max-width: 900px;
+            height: auto;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.5);
+            border-radius: 4px;
+        }
+
+        footer { text-align: center; padding: 4rem 1rem; color: var(--text-muted); font-size: 0.9rem; position: relative; z-index: 10; }
+
         @media (max-width: 900px) {
             .software-section { padding: 1.5rem; margin: 1.5rem auto; width: 88%; border-radius: 20px; }
             .section-header h2 { font-size: 1.6rem; }
             .brand-logo { height: 40px; width: 40px; }
             header { padding: 4rem 1.5rem 3rem 1.5rem; }
-            
-            /* Stacks the QRs and profile picture neatly on mobile screens */
-            .hero-top-row {
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 1.5rem;
-            }
-            .qr-side {
-                flex: 0 0 auto;
-            }
-            .profile-center {
-                order: -1; 
-                width: 100%;
-            }
-            .category-title {
-                padding: 1rem 2rem;
-                font-size: 1.2rem;
-            }
+            .hero-top-row { flex-wrap: wrap; justify-content: center; gap: 1.5rem; }
+            .qr-side { flex: 0 0 auto; }
+            .profile-center { order: -1; width: 100%; }
+            .category-title { padding: 1rem 2rem; font-size: 1.2rem; }
+            .pdf-toolbar { justify-content: center; }
+            .pdf-canvas-wrapper { padding: 0.5rem; }
         }
     </style>
 </head>
@@ -437,10 +431,7 @@
     </div>
 
     <header>
-        <!-- Top Row containing QRs and Profile Pic aligned on the same Y-axis -->
         <div class="hero-top-row">
-            
-            <!-- Clickable Linktree QR (Far Left) -->
             <div class="qr-side left">
                 <a href="https://linktr.ee/Momen.Sa" target="_blank" class="qr-card">
                     <div class="qr-wrapper">
@@ -450,12 +441,10 @@
                 </a>
             </div>
 
-            <!-- Profile Picture (Dead Center) -->
             <div class="profile-center">
                 <img src="image.png" alt="Moemen Salaam" class="profile-pic">
             </div>
 
-            <!-- Clickable LinkedIn QR (Far Right) -->
             <div class="qr-side right">
                 <a href="https://linkedin.com/in/MomenSalaam" target="_blank" class="qr-card">
                     <div class="qr-wrapper">
@@ -464,22 +453,15 @@
                     </div>
                 </a>
             </div>
-            
         </div>
 
-        <!-- Main Centered Content -->
         <div class="header-content">
             <h1>Moemen AbdulHalim Salaam</h1>
             <p>Mechanical Engineering Student, Siemens DISW Ambassador, Certified SOLIDWORKS Expert with 2+ years of hands-on experience in Rolling Stock and Railways. Have a solid foundation in Mechanical Design, CAD, Manufacturing, Quality Control, and Plant O&M.</p>
         </div>
     </header>
 
-    <!-- ========================================== -->
-    <!-- CATEGORY 1: MECHANICAL DESIGN              -->
-    <!-- ========================================== -->
-    <div class="category-wrapper">
-        <h2 class="category-title">Mechanical Design</h2>
-    </div>
+    <div class="category-wrapper"><h2 class="category-title">Mechanical Design</h2></div>
 
     <section id="solidworks" class="software-section">
         <div class="section-header">
@@ -522,12 +504,7 @@
         </div>
     </section>
 
-    <!-- ========================================== -->
-    <!-- CATEGORY 2: INFRASTRUCTURE DESIGN          -->
-    <!-- ========================================== -->
-    <div class="category-wrapper">
-        <h2 class="category-title">Infrastructure Design</h2>
-    </div>
+    <div class="category-wrapper"><h2 class="category-title">Infrastructure Design</h2></div>
 
     <!-- MicroStation Section -->
     <section id="microstation" class="software-section">
@@ -535,9 +512,47 @@
             <img src="https://gpradfprodeussa01.blob.core.windows.net/producticons/producticons/1000.svg" alt="MicroStation Logo" class="brand-logo">
             <h2><span class="highlight">MicroStation</span></h2>
         </div>
+        
+        <!-- Badges Row -->
+        <div class="badges-row">
+            <div class="cert-card badge-card">
+                <img src="https://images.credly.com/images/589cadeb-f3be-4b01-85bd-aa4970c3e27b/image.png" alt="Accredited Professional Badge" class="badge-img">
+                <h3>Accredited MicroStation Professional</h3>
+            </div>
+            <div class="cert-card badge-card">
+                <img src="https://images.credly.com/size/340x340/images/a92a03ca-ced3-4ea0-a9a4-968c8ee6f0a8/image.png" alt="Accredited User Badge" class="badge-img">
+                <h3>Accredited MicroStation User</h3>
+            </div>
+        </div>
+
+        <!-- Custom PDF.js Viewer (PAGE BY PAGE) -->
         <div class="cert-card">
-            <h3>Accredited MicroStation Professional</h3>
-            <p>Advanced proficiency in 2D and 3D infrastructure design, drafting, and modeling utilizing Bentley's comprehensive MicroStation environment.</p>
+            <h3>MicroStation Infrastructure Project & Documentation</h3>
+            <ul class="project-list">
+                <li>Comprehensive 2D drafting and robust 3D infrastructure modeling.</li>
+                <li>Strategic application of BIM coordination workflows for clash detection.</li>
+                <li>Generation of precision documentation optimized for engineering execution.</li>
+            </ul>
+
+            <div class="pdf-wrapper-container">
+                <div class="pdf-toolbar">
+                    <div class="pdf-controls">
+                        <button class="pdf-btn" id="pdf-start">|&#9664; Start</button>
+                        <button class="pdf-btn" id="pdf-prev">&#9664; Previous</button>
+                        <span style="color: var(--text-muted); font-size: 0.95rem; margin: 0 0.8rem;">
+                            Page <span id="page-num" style="color: var(--text-main); font-weight: bold;">1</span> of <span id="page-count" style="font-weight: bold;">--</span>
+                        </span>
+                        <button class="pdf-btn" id="pdf-next">Next &#9654;</button>
+                        <button class="pdf-btn" id="pdf-end">End &#9654;|</button>
+                    </div>
+                    <!-- This button routes to your Google Drive link as a backup/pop-out -->
+                    <button class="pdf-btn" id="pdf-new-tab">Open in New Tab &#8599;</button>
+                </div>
+                
+                <div class="pdf-canvas-wrapper">
+                    <canvas id="pdf-render"></canvas>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -577,12 +592,7 @@
         </div>
     </section>
 
-    <!-- ========================================== -->
-    <!-- CATEGORY 3: ROLLING STOCK & RAILWAYS       -->
-    <!-- ========================================== -->
-    <div class="category-wrapper">
-        <h2 class="category-title">Rolling Stock & Railways</h2>
-    </div>
+    <div class="category-wrapper"><h2 class="category-title">Rolling Stock & Railways</h2></div>
 
     <section id="railways" class="software-section">
         <div class="section-header">
@@ -607,5 +617,107 @@
         <p>&copy; 2026 Moemen AbdulHalim Salaam. Designed with Liquid iOS & Siemens Corporate Identity.</p>
     </footer>
 
+    <!-- PDF.js Integration Script -->
+    <script>
+        // =========================================================================
+        // LOCAL FILE ONLY: You must use the local "1.pdf" file for these buttons to work.
+        // Google Drive links block custom JS rendering.
+        // =========================================================================
+        const url = '1.pdf'; 
+        
+        // This is the fallback Google Drive URL for the "Open in New Tab" button
+        const driveUrl = 'https://drive.google.com/file/d/1-H9ZP7M9uTUP1TM4XGHERQsbaWULBGne/view';
+
+        let pdfDoc = null,
+            pageNum = 1,
+            pageIsRendering = false,
+            pageNumIsPending = null;
+
+        // Render at a high scale to keep text crisp, CSS will scale it down to fit the box
+        const scale = 2.0,
+              canvas = document.querySelector('#pdf-render'),
+              ctx = canvas.getContext('2d');
+
+        // Render the page
+        const renderPage = num => {
+            pageIsRendering = true;
+
+            // Get page
+            pdfDoc.getPage(num).then(page => {
+                const viewport = page.getViewport({ scale });
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+
+                const renderCtx = {
+                    canvasContext: ctx,
+                    viewport: viewport
+                };
+
+                page.render(renderCtx).promise.then(() => {
+                    pageIsRendering = false;
+
+                    if (pageNumIsPending !== null) {
+                        renderPage(pageNumIsPending);
+                        pageNumIsPending = null;
+                    }
+                });
+
+                document.querySelector('#page-num').textContent = num;
+            });
+        };
+
+        const queueRenderPage = num => {
+            if (pageIsRendering) {
+                pageNumIsPending = num;
+            } else {
+                renderPage(num);
+            }
+        };
+
+        // Button Events
+        document.querySelector('#pdf-prev').addEventListener('click', () => {
+            if (pageNum <= 1) return;
+            pageNum--;
+            queueRenderPage(pageNum);
+        });
+
+        document.querySelector('#pdf-next').addEventListener('click', () => {
+            if (pageNum >= pdfDoc.numPages) return;
+            pageNum++;
+            queueRenderPage(pageNum);
+        });
+
+        document.querySelector('#pdf-start').addEventListener('click', () => {
+            if (pageNum <= 1) return;
+            pageNum = 1;
+            queueRenderPage(pageNum);
+        });
+
+        document.querySelector('#pdf-end').addEventListener('click', () => {
+            if (pageNum >= pdfDoc.numPages) return;
+            pageNum = pdfDoc.numPages;
+            queueRenderPage(pageNum);
+        });
+
+        // Opens the actual Google Drive link in a new tab!
+        document.querySelector('#pdf-new-tab').addEventListener('click', () => {
+            window.open(driveUrl, '_blank');
+        });
+
+        // Initialize PDF
+        pdfjsLib.getDocument(url).promise.then(pdfDoc_ => {
+            pdfDoc = pdfDoc_;
+            document.querySelector('#page-count').textContent = pdfDoc.numPages;
+            renderPage(pageNum);
+        }).catch(err => {
+            const div = document.createElement('div');
+            div.style.color = '#ff3b30';
+            div.style.textAlign = 'center';
+            div.style.padding = '2rem';
+            div.innerHTML = `<strong>Error loading PDF:</strong> ${err.message}<br><br><span style="color:var(--text-muted); font-size:0.9rem;">To fix the "204" error, make sure <strong>1.pdf</strong> is in the exact same folder as this index.html file, and restart your Live Server.</span>`;
+            document.querySelector('.pdf-canvas-wrapper').insertBefore(div, canvas);
+            canvas.style.display = 'none';
+        });
+    </script>
 </body>
 </html>
