@@ -442,8 +442,9 @@
         }
         .pdf-btn:hover { background: rgba(0, 255, 185, 0.1); border-color: var(--siemens-cyan); box-shadow: 0 0 10px rgba(0, 255, 185, 0.2); }
 
-        .pdf-canvas-wrapper { width: 100%; display: flex; justify-content: center; background: #1e1e1e; padding: 1.5rem; box-sizing: border-box; }
-        .pdf-render { width: 100%; max-width: 900px; height: auto; box-shadow: 0 5px 25px rgba(0,0,0,0.5); border-radius: 4px; }
+        /* Replace your existing .pdf-render with this: */
+.pdf-canvas-wrapper { width: 100%; display: flex; justify-content: center; background: #1e1e1e; padding: 1.5rem; box-sizing: border-box; }
+.pdf-render { width: 100%; height: auto; box-shadow: 0 5px 25px rgba(0,0,0,0.5); border-radius: 4px; }
         
         model-viewer { width: 100%; height: 500px; background-color: #1e1e1e; border-radius: 4px; outline: none; }
         footer { text-align: center; padding: 4rem 1rem; color: var(--text-muted); font-size: 0.9rem; position: relative; z-index: 10; }
@@ -862,7 +863,6 @@
         // ==========================================
         function createPDFViewer(containerId, initialPdfUrl, driveUrl) {
             let pdfDoc = null, pageNum = 1, pageIsRendering = false, pageNumIsPending = null;
-            const scale = 2.0;
 
             const container = document.getElementById(containerId);
             if(!container) return null;
@@ -873,7 +873,18 @@
             const renderPage = num => {
                 pageIsRendering = true;
                 pdfDoc.getPage(num).then(page => {
-                    const viewport = page.getViewport({ scale });
+                    // DYNAMIC SCALING: Calculate scale based on the current wrapper width
+                    const wrapper = container.querySelector('.pdf-canvas-wrapper');
+                    // Subtract roughly 48px to account for the 1.5rem padding on both sides
+                    const targetWidth = wrapper.clientWidth - 48; 
+                    
+                    const unscaledViewport = page.getViewport({ scale: 1.0 });
+                    // Use devicePixelRatio for crisp text on high-res/Retina displays
+                    const dpr = window.devicePixelRatio || 1;
+                    const dynamicScale = (targetWidth / unscaledViewport.width) * dpr;
+
+                    const viewport = page.getViewport({ scale: dynamicScale });
+                    
                     canvas.height = viewport.height;
                     canvas.width = viewport.width;
 
@@ -924,6 +935,13 @@
             });
 
             const loadDoc = (url) => {
+                // BUG FIX: Clear any existing error messages before attempting to load the new file
+                const existingErr = container.querySelector('.pdf-error');
+                if(existingErr) existingErr.remove();
+                
+                // BUG FIX: Ensure canvas is visible in case it was hidden by a previous error
+                canvas.style.display = 'block';
+
                 pdfjsLib.getDocument(url).promise.then(pdfDoc_ => {
                     pdfDoc = pdfDoc_;
                     container.querySelector('.page-count').textContent = pdfDoc.numPages;
@@ -936,11 +954,8 @@
                     errorDiv.style.padding = '2rem';
                     errorDiv.innerHTML = `<strong>File Not Found:</strong> ${url}<br><br><span style="color:var(--text-muted); font-size:0.9rem;">Make sure the file exists in the same folder as this index.html file.</span>`;
                     
-                    const existingErr = container.querySelector('.pdf-error');
-                    if(existingErr) existingErr.remove();
-                    
                     errorDiv.className = "pdf-error";
-                    canvas.style.display = 'none';
+                    canvas.style.display = 'none'; // Hide the canvas since we have an error
                     container.querySelector('.pdf-canvas-wrapper').appendChild(errorDiv);
                 });
             };
