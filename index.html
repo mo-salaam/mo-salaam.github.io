@@ -10,6 +10,9 @@
     <script>
       pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
     </script>
+    
+    <!-- Google Model Viewer for 3D Rendering -->
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.1.1/model-viewer.min.js"></script>
 
     <style>
         /* ==========================================
@@ -90,7 +93,7 @@
         header {
             position: relative;
             width: 100%;
-            padding: 4rem 1rem 5rem 1rem;
+            padding: 4rem 1rem 3rem 1rem;
             z-index: 10;
         }
 
@@ -157,8 +160,8 @@
 
         .qr-center-icon {
             position: absolute;
-            width: 23px;
-            height: 23px;
+            width: 22px;
+            height: 22px;
             background: #ffffff;
             border-radius: 6px;
             padding: 0px;
@@ -199,64 +202,85 @@
         }
 
         /* ==========================================
-           4. CATEGORY HEADERS
+           4. MAIN CATEGORY TAB NAVIGATION
            ========================================== */
-        .category-wrapper {
-            width: 88%;
-            max-width: 1400px;
-            margin: 5rem auto 3rem auto;
+        /* Invisible Anchor for reliable scrolling */
+        #scroll-anchor {
             position: relative;
-            z-index: 10;
-            text-align: center;
+            visibility: hidden;
+            height: 0;
+            width: 100%;
         }
 
-        .category-title {
-            display: inline-flex;
-            align-items: center;
+        .main-nav-container {
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+            display: flex;
             justify-content: center;
-            font-size: clamp(1.4rem, 4vw, 2rem);
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            font-weight: 800;
-            color: var(--text-main);
-            padding: 1rem 3rem;
-            background: rgba(0, 255, 185, 0.03);
-            border: 1px solid var(--glass-border);
+            gap: 1rem;
+            margin: 0 auto 3rem auto;
+            width: fit-content;
+            background: rgba(0, 0, 40, 0.65);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            padding: 0.6rem;
             border-radius: 50px;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba(0, 255, 185, 0.05);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4), inset 0 0 15px rgba(0,255,185,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .main-tab-btn {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid transparent;
+            padding: 0.8rem 2rem;
+            border-radius: 40px;
+            font-size: 1.05rem;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            cursor: pointer;
             transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
             position: relative;
             overflow: hidden;
-            cursor: default;
         }
 
-        .category-title::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%; width: 50%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 255, 185, 0.2), transparent);
-            transition: left 0.7s ease;
+        .main-tab-btn:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.05);
         }
 
-        .category-title:hover {
-            transform: translateY(-5px) scale(1.02);
-            border-color: var(--siemens-cyan);
-            color: var(--siemens-cyan);
-            background: rgba(0, 255, 185, 0.08);
-            box-shadow: 0 15px 40px rgba(0, 255, 185, 0.2), 0 0 20px rgba(0, 255, 185, 0.1);
-            text-shadow: 0 0 15px rgba(0, 255, 185, 0.4);
+        .main-tab-btn.active {
+            color: var(--siemens-navy);
+            background: var(--siemens-cyan);
+            border: 1px solid var(--siemens-cyan);
+            box-shadow: 0 0 20px rgba(0, 255, 185, 0.4);
+            text-shadow: none;
+            font-weight: 700;
         }
 
-        .category-title:hover::before { left: 200%; }
+        .category-content {
+            display: none; /* Hidden by default */
+            animation: floatUp 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            padding-top: 1rem; /* Slight padding to space nicely from sticky nav */
+        }
+
+        .category-content.active {
+            display: block; /* Show active category */
+        }
+
+        @keyframes floatUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
         /* ==========================================
            5. IOS LIQUID GLASS PANELS
            ========================================== */
         .software-section {
             padding: 2.5rem;
-            margin: 2rem auto;
+            margin: 0 auto 2rem auto;
             width: 88%;
             max-width: 1400px;
             background: var(--glass-bg);
@@ -301,7 +325,7 @@
         #railways .highlight { background-image: var(--grad-railways); }
 
         /* ==========================================
-           6. CERTIFICATION CARDS
+           6. CERTIFICATION & BADGE CARDS
            ========================================== */
         .cert-card {
             background: rgba(0, 0, 0, 0.3);
@@ -339,84 +363,116 @@
         .cert-card h3 { font-size: 1.3rem; font-weight: 600; margin-bottom: 0.8rem; color: var(--text-main); }
         .cert-card p { color: var(--text-muted); font-size: 1.05rem; }
 
-        /* ==========================================
-           7. CUSTOM PDF VIEWER & BADGE STYLES
-           ========================================== */
         .badges-row {
-            display: flex; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1rem;
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 1.5rem; 
+            margin-bottom: 1.5rem;
+            align-items: stretch;
         }
         
+        .full-row { grid-column: 1 / -1; }
+
         .badge-card {
-            flex: 1; min-width: 300px; display: flex; align-items: center; gap: 1.5rem; margin-bottom: 0; padding: 1.5rem;
+            display: flex; align-items: center; gap: 1.5rem; margin-bottom: 0; padding: 1.5rem;
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            cursor: pointer;
+            height: 100%;
+            box-sizing: border-box;
         }
 
-        .badge-img { width: 70px; height: 70px; object-fit: contain; }
-
-        .project-list {
-            margin-left: 1.8rem; margin-bottom: 1rem; color: var(--text-muted); font-size: 1.05rem;
+        .badge-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            background: rgba(0, 255, 185, 0.08);
+            border: 1px solid var(--siemens-cyan);
+            box-shadow: 0 15px 40px rgba(0, 255, 185, 0.2), 0 0 20px rgba(0, 255, 185, 0.1);
         }
+
+        .badge-card h3 { font-size: 1.15rem; transition: all 0.3s ease; margin-bottom: 0.3rem;}
+        .badge-card p { font-size: 0.95rem; line-height: 1.4; }
+        
+        .badge-card:hover h3 { color: var(--siemens-cyan); text-shadow: 0 0 15px rgba(0, 255, 185, 0.4); }
+
+        .badge-img { width: 85px; height: 85px; object-fit: contain; transition: all 0.4s ease; flex-shrink: 0; }
+        .badge-card:hover .badge-img { filter: drop-shadow(0 0 15px rgba(0, 0, 0, 0.6)); transform: scale(1.3); }
+
+        .last-row-wrapper { display: flex; gap: 1.5rem; align-items: stretch; }
+        .draftsight-card { flex: 1 1 auto; }
+
+        .badge-stat {
+            flex: 0 0 auto; 
+            min-width: 250px; 
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--glass-border);
+            text-align: center; 
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            padding: 1.5rem 2rem; border-radius: 20px;
+        }
+        .badge-stat h2 { color: var(--siemens-cyan); font-size: 3.5rem; margin-bottom: 0.5rem; line-height: 1; }
+        .badge-stat p { font-size: 1rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 0;}
+
+        /* ==========================================
+           7. CUSTOM PDF & 3D VIEWER STYLES
+           ========================================== */
+        .project-list { margin-left: 1.8rem; margin-bottom: 1rem; color: var(--text-muted); font-size: 1.05rem; }
         .project-list li { margin-bottom: 0.5rem; }
 
-        /* PDF CUSTOM STYLES - PAGE BY PAGE FITTING */
+        .viewer-tabs { display: flex; gap: 0.8rem; margin-bottom: 1rem; flex-wrap: wrap; margin-top: 1.5rem; }
+        .tab-btn {
+            background: rgba(0, 0, 0, 0.4); border: 1px solid var(--glass-border); color: var(--text-muted);
+            padding: 0.6rem 1.2rem; border-radius: 8px; cursor: pointer; transition: all 0.3s; font-weight: 600; font-size: 0.95rem;
+        }
+        .tab-btn:hover, .tab-btn.active-tab {
+            background: rgba(0, 255, 185, 0.1); color: var(--siemens-cyan); border-color: var(--siemens-cyan); box-shadow: 0 0 15px rgba(0, 255, 185, 0.2);
+        }
+
         .pdf-wrapper-container {
-            border: 1px solid var(--glass-border);
-            border-radius: 12px;
-            background: rgba(0, 0, 0, 0.4);
-            overflow: hidden;
-            margin-top: 2rem;
-            display: flex;
-            flex-direction: column;
+            border: 1px solid var(--glass-border); border-radius: 12px; background: rgba(0, 0, 0, 0.4); overflow: hidden; display: flex; flex-direction: column;
         }
 
         .pdf-toolbar {
             display: flex; justify-content: space-between; align-items: center; padding: 1rem;
-            background: rgba(0, 255, 185, 0.05); border-bottom: 1px solid var(--glass-border);
-            flex-wrap: wrap; gap: 1rem;
+            background: rgba(0, 255, 185, 0.05); border-bottom: 1px solid var(--glass-border); flex-wrap: wrap; gap: 1rem;
         }
 
-        .pdf-controls {
-            display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;
-        }
-
+        .pdf-controls { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
         .pdf-btn {
             background: transparent; border: 1px solid var(--glass-border); color: var(--text-main);
-            padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; transition: all 0.3s ease;
-            font-weight: 600; font-size: 0.9rem; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; font-weight: 600; font-size: 0.9rem; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
         }
+        .pdf-btn:hover { background: rgba(0, 255, 185, 0.1); border-color: var(--siemens-cyan); box-shadow: 0 0 10px rgba(0, 255, 185, 0.2); }
 
-        .pdf-btn:hover {
-            background: rgba(0, 255, 185, 0.1); border-color: var(--siemens-cyan); box-shadow: 0 0 10px rgba(0, 255, 185, 0.2);
-        }
-
-        .pdf-canvas-wrapper {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            background: #1e1e1e;
-            padding: 1.5rem;
-            box-sizing: border-box;
-        }
-
-        /* This ensures the PDF fits the screen width and does not scroll */
-        #pdf-render {
-            width: 100%;
-            max-width: 900px;
-            height: auto;
-            box-shadow: 0 5px 25px rgba(0,0,0,0.5);
-            border-radius: 4px;
-        }
-
+        .pdf-canvas-wrapper { width: 100%; display: flex; justify-content: center; background: #1e1e1e; padding: 1.5rem; box-sizing: border-box; }
+        .pdf-render { width: 100%; max-width: 900px; height: auto; box-shadow: 0 5px 25px rgba(0,0,0,0.5); border-radius: 4px; }
+        
+        model-viewer { width: 100%; height: 500px; background-color: #1e1e1e; border-radius: 4px; outline: none; }
         footer { text-align: center; padding: 4rem 1rem; color: var(--text-muted); font-size: 0.9rem; position: relative; z-index: 10; }
 
         @media (max-width: 900px) {
+            .main-nav-container {
+                width: 90%;
+                justify-content: flex-start;
+                overflow-x: auto;
+                padding: 0.5rem;
+                border-radius: 20px;
+                white-space: nowrap;
+                /* Hides scrollbar for clean look on mobile */
+                -ms-overflow-style: none;  
+                scrollbar-width: none;  
+            }
+            .main-nav-container::-webkit-scrollbar { display: none; }
+            .main-tab-btn { padding: 0.6rem 1.2rem; font-size: 0.95rem; }
+            
+            .badges-row { grid-template-columns: 1fr; }
+            .last-row-wrapper { flex-direction: column; }
+            .badge-stat { min-width: 100%; width: 100%; }
             .software-section { padding: 1.5rem; margin: 1.5rem auto; width: 88%; border-radius: 20px; }
             .section-header h2 { font-size: 1.6rem; }
             .brand-logo { height: 40px; width: 40px; }
-            header { padding: 4rem 1.5rem 3rem 1.5rem; }
+            header { padding: 4rem 1.5rem 2rem 1.5rem; }
             .hero-top-row { flex-wrap: wrap; justify-content: center; gap: 1.5rem; }
             .qr-side { flex: 0 0 auto; }
             .profile-center { order: -1; width: 100%; }
-            .category-title { padding: 1rem 2rem; font-size: 1.2rem; }
             .pdf-toolbar { justify-content: center; }
             .pdf-canvas-wrapper { padding: 0.5rem; }
         }
@@ -435,7 +491,7 @@
             <div class="qr-side left">
                 <a href="https://linktr.ee/Momen.Sa" target="_blank" class="qr-card">
                     <div class="qr-wrapper">
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://linktr.ee/Momen.Sa" alt="Linktree QR">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://linktr.ee/Momen.Sa&format=svg" alt="Linktree QR">
                         <img src="https://img.icons8.com/color/48/linktree.png" class="qr-center-icon" alt="Linktree Icon">
                     </div>
                 </a>
@@ -448,7 +504,7 @@
             <div class="qr-side right">
                 <a href="https://linkedin.com/in/MomenSalaam" target="_blank" class="qr-card">
                     <div class="qr-wrapper">
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://linkedin.com/in/MomenSalaam" alt="LinkedIn QR">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://linkedin.com/in/MomenSalaam&format=svg" alt="LinkedIn QR">
                         <img src="https://img.icons8.com/color/48/linkedin.png" class="qr-center-icon" alt="LinkedIn Icon">
                     </div>
                 </a>
@@ -461,263 +517,517 @@
         </div>
     </header>
 
-    <div class="category-wrapper"><h2 class="category-title">Mechanical Design</h2></div>
+    <!-- Invisible Anchor for calculating perfect scroll position -->
+    <div id="scroll-anchor"></div>
 
-    <section id="solidworks" class="software-section">
-        <div class="section-header">
-            <img src="https://img.icons8.com/color/1200/solidworks.jpg" alt="SOLIDWORKS Logo" class="brand-logo">
-            <h2><span class="highlight">SOLIDWORKS</span> Journey</h2>
-        </div>
-        <div class="cert-card">
-            <h3>Certified SOLIDWORKS Expert</h3>
-            <p>Demonstrated highest-level proficiency in advanced part modeling, complex assembly configurations, and robust parametric design within the Dassault Systèmes ecosystem.</p>
-        </div>
-    </section>
+    <!-- MAIN TAB NAVIGATION -->
+    <nav class="main-nav-container" id="main-nav">
+        <button class="main-tab-btn active" onclick="switchMainCategory('mech', this)">Mechanical Design</button>
+        <button class="main-tab-btn" onclick="switchMainCategory('infra', this)">Infrastructure Design</button>
+        <button class="main-tab-btn" onclick="switchMainCategory('rail', this)">Rolling Stock & Railways</button>
+    </nav>
 
-    <section id="catia" class="software-section">
-        <div class="section-header">
-            <img src="https://www.sty-fun.com/wp-content/uploads/2024/05/DS-CATIA-Logo-1.png" alt="CATIA Logo" class="brand-logo">
-            <h2><span class="highlight">CATIA</span> Certifications & Training</h2>
-        </div>
-        <div class="cert-card">
-            <h3>Certified CATIA Sheet Metal Designer Professional</h3>
-            <p>Specialized expertise in complex sheet metal design, generative shape design, and unfolding manufacturing requirements utilizing Dassault Systèmes advanced surfacing tools.</p>
-        </div>
-        <div class="cert-card">
-            <h3>Official Training Validation</h3>
-            <p>Completed comprehensive, formal training pathways emphasizing aerospace and automotive standard practices in CATIA V5/3DEXPERIENCE environments.</p>
-        </div>
-    </section>
-
-    <section id="nx" class="software-section">
-        <div class="section-header">
-            <img src="NX.png" alt="Siemens NX Logo" class="brand-logo">
-            <h2><span class="highlight">Siemens NX</span> Portfolio</h2>
-        </div>
-        <div class="cert-card">
-            <h3>Siemens NX Design Certified Associate</h3>
-            <p>Awarded February 2026. Validated foundational and advanced mechanical design, master modeling concepts, and synchronized technology workflows.</p>
-        </div>
-        <div class="cert-card">
-            <h3>Siemens Student Ambassador Expert</h3>
-            <p>Active since May 2025 within the Siemens global academic team. Championing the adoption and technical mastery of Siemens Digital Industries Software platforms among peers.</p>
-        </div>
-    </section>
-
-    <div class="category-wrapper"><h2 class="category-title">Infrastructure Design</h2></div>
-
-    <!-- MicroStation Section -->
-    <section id="microstation" class="software-section">
-        <div class="section-header">
-            <img src="https://gpradfprodeussa01.blob.core.windows.net/producticons/producticons/1000.svg" alt="MicroStation Logo" class="brand-logo">
-            <h2><span class="highlight">MicroStation</span></h2>
-        </div>
-        
-        <!-- Badges Row -->
-        <div class="badges-row">
-            <div class="cert-card badge-card">
-                <img src="https://images.credly.com/images/589cadeb-f3be-4b01-85bd-aa4970c3e27b/image.png" alt="Accredited Professional Badge" class="badge-img">
-                <h3>Accredited MicroStation Professional</h3>
+    <!-- ==========================================
+         CATEGORY 1: MECHANICAL DESIGN
+         ========================================== -->
+    <div id="category-mech" class="category-content active">
+        <section id="solidworks" class="software-section">
+            <div class="section-header">
+                <img src="https://img.icons8.com/color/1200/solidworks.jpg" alt="SOLIDWORKS Logo" class="brand-logo">
+                <h2><span class="highlight">SOLIDWORKS</span> Journey</h2>
             </div>
-            <div class="cert-card badge-card">
-                <img src="https://images.credly.com/size/340x340/images/a92a03ca-ced3-4ea0-a9a4-968c8ee6f0a8/image.png" alt="Accredited User Badge" class="badge-img">
-                <h3>Accredited MicroStation User</h3>
-            </div>
-        </div>
-
-        <!-- Custom PDF.js Viewer (PAGE BY PAGE) -->
-        <div class="cert-card">
-            <h3>MicroStation Infrastructure Project & Documentation</h3>
-            <ul class="project-list">
-                <li>Comprehensive 2D drafting and robust 3D infrastructure modeling.</li>
-                <li>Strategic application of BIM coordination workflows for clash detection.</li>
-                <li>Generation of precision documentation optimized for engineering execution.</li>
-            </ul>
-
-            <div class="pdf-wrapper-container">
-                <div class="pdf-toolbar">
-                    <div class="pdf-controls">
-                        <button class="pdf-btn" id="pdf-start">|&#9664; Start</button>
-                        <button class="pdf-btn" id="pdf-prev">&#9664; Previous</button>
-                        <span style="color: var(--text-muted); font-size: 0.95rem; margin: 0 0.8rem;">
-                            Page <span id="page-num" style="color: var(--text-main); font-weight: bold;">1</span> of <span id="page-count" style="font-weight: bold;">--</span>
-                        </span>
-                        <button class="pdf-btn" id="pdf-next">Next &#9654;</button>
-                        <button class="pdf-btn" id="pdf-end">End &#9654;|</button>
+            
+            <div class="badges-row">
+                <div class="cert-card badge-card full-row">
+                    <img src="https://images.credly.com/size/340x340/images/3627f05d-38f6-4bcb-a995-571f7c5caf2d/blob" alt="CSWE Badge" class="badge-img">
+                    <div>
+                        <h3>Certified SOLIDWORKS Expert - Mechanical Design</h3>
+                        <p>Highest-level proficiency in advanced part modeling, complex assemblies, and robust parametric design.</p>
                     </div>
-                    <!-- This button routes to your Google Drive link as a backup/pop-out -->
-                    <button class="pdf-btn" id="pdf-new-tab">Open in New Tab &#8599;</button>
                 </div>
-                
-                <div class="pdf-canvas-wrapper">
-                    <canvas id="pdf-render"></canvas>
+
+                <div class="cert-card badge-card">
+                    <img src="https://images.credly.com/images/b3b803d7-7a90-4777-af72-2fbe61c96c04/blob" alt="CSWPA Mold Making" class="badge-img">
+                    <div>
+                        <h3>Certified SOLIDWORKS Professional Advanced Mold Making</h3>
+                        <p>Advanced knowledge in developing robust mold tooling, parting lines, and cavity designs.</p>
+                    </div>
+                </div>
+
+                <div class="cert-card badge-card">
+                    <img src="https://images.credly.com/images/422106a4-f564-4c82-bf1b-2089ed0e297d/blob" alt="CSWPA Sheet Metal" class="badge-img">
+                    <div>
+                        <h3>Certified SOLIDWORKS Professional Advanced Sheet Metal</h3>
+                        <p>Expertise in generating flat patterns, bends, and specialized sheet metal manufacturing workflows.</p>
+                    </div>
+                </div>
+
+                <div class="cert-card badge-card">
+                    <img src="https://images.credly.com/images/da15c303-fcd7-42e3-8a35-a4c10f4deb75/blob" alt="CSWPA Surfacing" class="badge-img">
+                    <div>
+                        <h3>Certified SOLIDWORKS Professional Advanced Surfacing</h3>
+                        <p>Advanced proficiency in creating complex, freeform surfaces and high-quality geometry.</p>
+                    </div>
+                </div>
+
+                <div class="cert-card badge-card">
+                    <img src="https://images.credly.com/images/2e1320ee-4b2d-4a70-93c2-ef2c9bfa69ba/blob" alt="CSWPA Weldments" class="badge-img">
+                    <div>
+                        <h3>Certified SOLIDWORKS Professional Advanced Weldments</h3>
+                        <p>Mastery in designing complex structural frames and generating accurate weldment cut lists.</p>
+                    </div>
+                </div>
+
+                <div class="cert-card badge-card">
+                    <img src="https://images.credly.com/images/d2662c9d-ab19-480c-814f-e61a476cc719/blob" alt="CSWPA Drawing Tools" class="badge-img">
+                    <div>
+                        <h3>Certified SOLIDWORKS Professional Advanced Drawing Tools</h3>
+                        <p>Advanced ability to create precise, manufacturing-ready 2D engineering drawings and detailing.</p>
+                    </div>
+                </div>
+
+                <div class="cert-card badge-card">
+                    <img src="https://images.credly.com/images/be9a31ad-4684-4413-8882-8e39064a4d1a/blob" alt="CSWP Mechanical Design" class="badge-img">
+                    <div>
+                        <h3>Certified SOLIDWORKS Professional Mechanical Design</h3>
+                        <p>Proven professional ability to design and analyze parametric parts and mechanical assemblies.</p>
+                    </div>
+                </div>
+
+                <div class="cert-card badge-card">
+                    <img src="https://images.credly.com/images/517f664e-5c06-4aaf-a58d-a03a4675d448/blob" alt="CSWP Simulation" class="badge-img">
+                    <div>
+                        <h3>Certified SOLIDWORKS Professional Simulation</h3>
+                        <p>Advanced understanding of finite element analysis (FEA) and robust stress testing workflows.</p>
+                    </div>
+                </div>
+
+                <div class="cert-card badge-card">
+                    <img src="https://images.credly.com/images/7329299d-32ce-48ed-8527-b6db73f7e224/blob" alt="CSWA Mechanical Design" class="badge-img">
+                    <div>
+                        <h3>Certified SOLIDWORKS Associate Mechanical Design</h3>
+                        <p>Foundational mastery of 3D solid modeling and basic mechanical engineering design principles.</p>
+                    </div>
+                </div>
+
+                <div class="cert-card badge-card">
+                    <img src="https://images.credly.com/images/e5b472bc-e574-4192-b6be-dd1c17e14c9b/blob" alt="CSWA Simulation" class="badge-img">
+                    <div>
+                        <h3>Certified SOLIDWORKS Associate Simulation</h3>
+                        <p>Foundational knowledge of simulating structural behavior and analyzing general design strength.</p>
+                    </div>
+                </div>
+
+                <div class="cert-card badge-card">
+                    <img src="https://images.credly.com/images/23f831f4-e3ce-4633-ab5a-2657fdbc2f9f/blob" alt="CSWA Additive Manufacturing" class="badge-img">
+                    <div>
+                        <h3>Certified SOLIDWORKS Associate Additive Manufacturing</h3>
+                        <p>Understanding of 3D printing, material properties, and FDM manufacturing considerations.</p>
+                    </div>
+                </div>
+
+                <div class="full-row last-row-wrapper">
+                    <div class="cert-card badge-card draftsight-card">
+                        <img src="https://images.credly.com/images/5c1e2c69-3c6c-4d58-92c7-244571d0127f/image.png" alt="DraftSight Associate" class="badge-img">
+                        <div>
+                            <h3>Certified DraftSight Associate - 2D Design and Drafting</h3>
+                            <p>Comprehensive skill set and proficiency in creating 2D design sets, applying drafting concepts, and producing layouts.</p>
+                        </div>
+                    </div>
+
+                    <div class="cert-card badge-card badge-stat">
+                        <div>
+                            <h2>8+</h2>
+                            <p>Additional Badges &<br>Certifications</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
 
-    <!-- OpenBuildings Designer Section -->
-    <section id="openbuildings" class="software-section">
-        <div class="section-header">
-            <img src="https://gpradfprodeussa01.blob.core.windows.net/producticons/producticons/1934.svg" alt="OpenBuildings Logo" class="brand-logo">
-            <h2><span class="highlight">OpenBuildings Designer</span></h2>
-        </div>
-        <div class="cert-card">
-            <h3>Accredited OpenBuildings Professional</h3>
-            <p>Specialized in multidisciplinary building design, BIM workflows, and architectural/structural simulations tailored for complex infrastructure projects.</p>
-        </div>
-    </section>
+            <!-- SolidWorks Project & Multi-Viewer -->
+            <div class="cert-card">
+                <h3>Mechanical Design: 175 kW Double-Reduction Gearbox</h3>
+                <ul class="project-list">
+                    <li>Engineered a heavy-duty parallel shaft gearbox tailored for local manufacturing capabilities.</li>
+                    <li>Specified spur gears over helical geometries to accommodate specific local casting constraints and simplify fabrication.</li>
+                    <li>Calculated bearing life and performed detailed shaft stress analysis for robust performance.</li>
+                </ul>
 
-    <!-- WaterCAD Section -->
-    <section id="watercad" class="software-section">
-        <div class="section-header">
-            <img src="https://gpradfprodeussa01.blob.core.windows.net/producticons/producticons/1225.svg" alt="WaterCAD Logo" class="brand-logo" style="background: white;">
-            <h2><span class="highlight">WaterCAD</span></h2>
-        </div>
-        <div class="cert-card">
-            <h3>WaterCAD Proficiency</h3>
-            <p>Applied knowledge in hydraulic modeling, water distribution analysis, and infrastructure planning.</p>
-        </div>
-    </section>
+                <div class="viewer-tabs">
+                    <button class="tab-btn sw-tab-btn active-tab" onclick="switchSWTab('pdf1', this)">Calculations PDF</button>
+                    <button class="tab-btn sw-tab-btn" onclick="switchSWTab('pdf2', this)">Assembly Drawings</button>
+                    <button class="tab-btn sw-tab-btn" onclick="switchSWTab('3d', this)">Interactive 3D Model</button>
+                </div>
 
-    <!-- OpenPlant Section -->
-    <section id="openplant" class="software-section">
-        <div class="section-header">
-            <img src="https://gpradfprodeussa01.blob.core.windows.net/producticons/producticons/1830.svg" alt="OpenPlant Logo" class="brand-logo">
-            <h2><span class="highlight">OpenPlant</span></h2>
-        </div>
-        <div class="cert-card">
-            <h3>OpenPlant Modeler</h3>
-            <p>Proficiency in 3D plant design, piping systems, and intelligent P&ID creation for industrial scale infrastructure and process manufacturing facilities.</p>
-        </div>
-    </section>
+                <div class="pdf-wrapper-container" id="sw-pdf-container">
+                    <div class="pdf-toolbar">
+                        <div class="pdf-controls">
+                            <button class="pdf-btn pdf-start">|&#9664; Start</button>
+                            <button class="pdf-btn pdf-prev">&#9664; Previous</button>
+                            <span style="color: var(--text-muted); font-size: 0.95rem; margin: 0 0.8rem;">
+                                Page <span class="page-num" style="color: var(--text-main); font-weight: bold;">1</span> of <span class="page-count" style="font-weight: bold;">--</span>
+                            </span>
+                            <button class="pdf-btn pdf-next">Next &#9654;</button>
+                            <button class="pdf-btn pdf-end">End &#9654;|</button>
+                        </div>
+                        <button class="pdf-btn pdf-new-tab">Open in New Tab &#8599;</button>
+                    </div>
+                    <div class="pdf-canvas-wrapper">
+                        <canvas class="pdf-render"></canvas>
+                    </div>
+                </div>
 
-    <div class="category-wrapper"><h2 class="category-title">Rolling Stock & Railways</h2></div>
+                <div class="pdf-wrapper-container" id="sw-3d-container" style="display: none; padding: 1rem;">
+                    <model-viewer src="gearbox.glb" camera-controls auto-rotate shadow-intensity="1" exposure="1.2"></model-viewer>
+                    <p style="text-align: center; color: var(--text-muted); font-size: 0.85rem; margin-top: 0.5rem;">Drag to rotate • Scroll to zoom</p>
+                </div>
+            </div>
+        </section>
 
-    <section id="railways" class="software-section">
-        <div class="section-header">
-            <img src="https://img.icons8.com/ios-filled/100/1a1a1c/train.png" alt="Railway Icon" class="brand-logo">
-            <h2><span class="highlight">Railway Engineering</span> & Ops</h2>
-        </div>
-        <div class="cert-card">
-            <h3>Assistant Locomotive Operator - Egyptian National Railways</h3>
-            <p>Over two years of hands-on experience alongside senior operators. Executed mainline rolling stock operations, mechanical diagnostics, and safety protocols within a high-stakes transportation environment.</p>
-        </div>
-        <div class="cert-card">
-            <h3>Siemens Immersive Design Challenge</h3>
-            <p>Developed an innovative retrofit concept for railway coaches, integrating flexible CIGS solar panels to enhance energy efficiency and sustainability in modern rail transit systems.</p>
-        </div>
-        <div class="cert-card">
-            <h3>Locomotive Technical Analysis</h3>
-            <p>Extensive study of mechanical layouts, electrical systems, and diesel engine series (such as EMD 645/710 and GE GEVO) across platforms including EMD, GE Transportation (Wabtec), Alstom, Adtranz, and Henschel.</p>
-        </div>
-    </section>
+        <section id="catia" class="software-section">
+            <div class="section-header">
+                <img src="https://www.sty-fun.com/wp-content/uploads/2024/05/DS-CATIA-Logo-1.png" alt="CATIA Logo" class="brand-logo">
+                <h2><span class="highlight">CATIA</span> Certifications & Training</h2>
+            </div>
+            <div class="cert-card">
+                <h3>Certified CATIA Sheet Metal Designer Professional</h3>
+                <p>Specialized expertise in complex sheet metal design, generative shape design, and unfolding manufacturing requirements utilizing Dassault Systèmes advanced surfacing tools.</p>
+            </div>
+            <div class="cert-card">
+                <h3>Official Training Validation</h3>
+                <p>Completed comprehensive, formal training pathways emphasizing aerospace and automotive standard practices in CATIA V5/3DEXPERIENCE environments.</p>
+            </div>
+        </section>
+
+        <section id="nx" class="software-section">
+            <div class="section-header">
+                <img src="NX.png" alt="Siemens NX Logo" class="brand-logo">
+                <h2><span class="highlight">Siemens NX</span> Portfolio</h2>
+            </div>
+            <div class="cert-card">
+                <h3>Siemens NX Design Certified Associate</h3>
+                <p>Awarded February 2026. Validated foundational and advanced mechanical design, master modeling concepts, and synchronized technology workflows.</p>
+            </div>
+            <div class="cert-card">
+                <h3>Siemens Student Ambassador Expert</h3>
+                <p>Active since May 2025 within the Siemens global academic team. Championing the adoption and technical mastery of Siemens Digital Industries Software platforms among peers.</p>
+            </div>
+
+<!-- SolidWorks Project & Multi-Viewer -->
+            <div class="cert-card">
+                <h3>Mechanical Design: 175 kW Double-Reduction Gearbox</h3>
+                <ul class="project-list">
+                    <li>Engineered a heavy-duty parallel shaft gearbox tailored for local manufacturing capabilities.</li>
+                    <li>Specified spur gears over helical geometries to accommodate specific local casting constraints and simplify fabrication.</li>
+                    <li>Calculated bearing life and performed detailed shaft stress analysis for robust performance.</li>
+                </ul>
+
+                <div class="viewer-tabs">
+                    <button class="tab-btn sw-tab-btn active-tab" onclick="switchSWTab('pdf1', this)">Calculations PDF</button>
+                    <button class="tab-btn sw-tab-btn" onclick="switchSWTab('pdf2', this)">Assembly Drawings</button>
+                    <button class="tab-btn sw-tab-btn" onclick="switchSWTab('3d', this)">Interactive 3D Model</button>
+                </div>
+
+                <div class="pdf-wrapper-container" id="sw-pdf-container">
+                    <div class="pdf-toolbar">
+                        <div class="pdf-controls">
+                            <button class="pdf-btn pdf-start">|&#9664; Start</button>
+                            <button class="pdf-btn pdf-prev">&#9664; Previous</button>
+                            <span style="color: var(--text-muted); font-size: 0.95rem; margin: 0 0.8rem;">
+                                Page <span class="page-num" style="color: var(--text-main); font-weight: bold;">1</span> of <span class="page-count" style="font-weight: bold;">--</span>
+                            </span>
+                            <button class="pdf-btn pdf-next">Next &#9654;</button>
+                            <button class="pdf-btn pdf-end">End &#9654;|</button>
+                        </div>
+                        <button class="pdf-btn pdf-new-tab">Open in New Tab &#8599;</button>
+                    </div>
+                    <div class="pdf-canvas-wrapper">
+                        <canvas class="pdf-render"></canvas>
+                    </div>
+                </div>
+
+                <div class="pdf-wrapper-container" id="sw-3d-container" style="display: none; padding: 1rem;">
+                    <model-viewer src="gearbox.glb" camera-controls auto-rotate shadow-intensity="1" exposure="1.2"></model-viewer>
+                    <p style="text-align: center; color: var(--text-muted); font-size: 0.85rem; margin-top: 0.5rem;">Drag to rotate • Scroll to zoom</p>
+                </div>
+            </div>
+
+
+
+        </section>
+    </div> <!-- /END CATEGORY: MECH -->
+
+    <!-- ==========================================
+         CATEGORY 2: INFRASTRUCTURE DESIGN
+         ========================================== -->
+    <div id="category-infra" class="category-content">
+        <section id="microstation" class="software-section">
+            <div class="section-header">
+                <img src="https://gpradfprodeussa01.blob.core.windows.net/producticons/producticons/1000.svg" alt="MicroStation Logo" class="brand-logo">
+                <h2><span class="highlight">MicroStation</span></h2>
+            </div>
+            
+            <div class="badges-row">
+                <div class="cert-card badge-card">
+                    <img src="https://images.credly.com/images/589cadeb-f3be-4b01-85bd-aa4970c3e27b/image.png" alt="Accredited Professional Badge" class="badge-img">
+                    <div>
+                        <h3>Bentley Accredited MicroStation Professional</h3>
+                    </div>
+                </div>
+                <div class="cert-card badge-card">
+                    <img src="https://images.credly.com/size/340x340/images/a92a03ca-ced3-4ea0-a9a4-968c8ee6f0a8/image.png" alt="Accredited User Badge" class="badge-img">
+                    <div>
+                        <h3>Bentley Accredited MicroStation User</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cert-card">
+                <h3>MicroStation Infrastructure Project & Documentation</h3>
+                <ul class="project-list">
+                    <li>Comprehensive 2D drafting and robust 3D infrastructure modeling.</li>
+                    <li>Strategic application of BIM coordination workflows for clash detection.</li>
+                    <li>Generation of precision documentation optimized for engineering execution.</li>
+                </ul>
+
+                <div class="pdf-wrapper-container" id="microstation-pdf-container">
+                    <div class="pdf-toolbar">
+                        <div class="pdf-controls">
+                            <button class="pdf-btn pdf-start">|&#9664; Start</button>
+                            <button class="pdf-btn pdf-prev">&#9664; Previous</button>
+                            <span style="color: var(--text-muted); font-size: 0.95rem; margin: 0 0.8rem;">
+                                Page <span class="page-num" style="color: var(--text-main); font-weight: bold;">1</span> of <span class="page-count" style="font-weight: bold;">--</span>
+                            </span>
+                            <button class="pdf-btn pdf-next">Next &#9654;</button>
+                            <button class="pdf-btn pdf-end">End &#9654;|</button>
+                        </div>
+                        <button class="pdf-btn pdf-new-tab">Open in New Tab &#8599;</button>
+                    </div>
+                    <div class="pdf-canvas-wrapper">
+                        <canvas class="pdf-render"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="openbuildings" class="software-section">
+            <div class="section-header">
+                <img src="https://gpradfprodeussa01.blob.core.windows.net/producticons/producticons/1934.svg" alt="OpenBuildings Logo" class="brand-logo">
+                <h2><span class="highlight">OpenBuildings Designer</span></h2>
+            </div>
+            <div class="cert-card">
+                <h3>Accredited OpenBuildings Professional</h3>
+                <p>Specialized in multidisciplinary building design, BIM workflows, and architectural/structural simulations tailored for complex infrastructure projects.</p>
+            </div>
+        </section>
+
+        <section id="watercad" class="software-section">
+            <div class="section-header">
+                <img src="https://gpradfprodeussa01.blob.core.windows.net/producticons/producticons/1225.svg" alt="WaterCAD Logo" class="brand-logo" style="background: white;">
+                <h2><span class="highlight">WaterCAD</span></h2>
+            </div>
+            <div class="cert-card">
+                <h3>WaterCAD Proficiency</h3>
+                <p>Applied knowledge in hydraulic modeling, water distribution analysis, and infrastructure planning.</p>
+            </div>
+        </section>
+
+        <section id="openplant" class="software-section">
+            <div class="section-header">
+                <img src="https://gpradfprodeussa01.blob.core.windows.net/producticons/producticons/1830.svg" alt="OpenPlant Logo" class="brand-logo">
+                <h2><span class="highlight">OpenPlant</span></h2>
+            </div>
+            <div class="cert-card">
+                <h3>OpenPlant Modeler</h3>
+                <p>Proficiency in 3D plant design, piping systems, and intelligent P&ID creation for industrial scale infrastructure and process manufacturing facilities.</p>
+            </div>
+        </section>
+    </div> <!-- /END CATEGORY: INFRA -->
+
+    <!-- ==========================================
+         CATEGORY 3: ROLLING STOCK
+         ========================================== -->
+    <div id="category-rail" class="category-content">
+        <section id="railways" class="software-section">
+            <div class="section-header">
+                <img src="https://img.icons8.com/ios-filled/100/1a1a1c/train.png" alt="Railway Icon" class="brand-logo">
+                <h2><span class="highlight">Railway Engineering</span> & Ops</h2>
+            </div>
+            <div class="cert-card">
+                <h3>Assistant Locomotive Operator - Egyptian National Railways</h3>
+                <p>Over two years of hands-on experience alongside senior operators. Executed mainline rolling stock operations, mechanical diagnostics, and safety protocols within a high-stakes transportation environment.</p>
+            </div>
+            <div class="cert-card">
+                <h3>Siemens Immersive Design Challenge</h3>
+                <p>Developed an innovative retrofit concept for railway coaches, integrating flexible CIGS solar panels to enhance energy efficiency and sustainability in modern rail transit systems.</p>
+            </div>
+            <div class="cert-card">
+                <h3>Locomotive Technical Analysis</h3>
+                <p>Extensive study of mechanical layouts, electrical systems, and diesel engine series (such as EMD 645/710 and GE GEVO) across platforms including EMD, GE Transportation (Wabtec), Alstom, Adtranz, and Henschel.</p>
+            </div>
+        </section>
+    </div> <!-- /END CATEGORY: RAIL -->
 
     <footer>
         <p>&copy; 2026 Moemen AbdulHalim Salaam. Designed with Liquid iOS & Siemens Corporate Identity.</p>
     </footer>
 
-    <!-- PDF.js Integration Script -->
     <script>
-        // =========================================================================
-        // LOCAL FILE ONLY: You must use the local "1.pdf" file for these buttons to work.
-        // Google Drive links block custom JS rendering.
-        // =========================================================================
-        const url = '1.pdf'; 
-        
-        // This is the fallback Google Drive URL for the "Open in New Tab" button
-        const driveUrl = 'https://drive.google.com/file/d/1-H9ZP7M9uTUP1TM4XGHERQsbaWULBGne/view';
+        // ==========================================
+        // MAIN CATEGORY TAB SWITCHING LOGIC
+        // ==========================================
+        window.switchMainCategory = function(catId, btnElement) {
+            // 1. Reset all tab buttons and update active state
+            document.querySelectorAll('.main-tab-btn').forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
 
-        let pdfDoc = null,
-            pageNum = 1,
-            pageIsRendering = false,
-            pageNumIsPending = null;
+            // 2. Grab the static anchor's exact vertical position from the document.
+            // Subtracting 60 ensures we scroll a little bit higher, giving comfortable breathing room.
+            const anchor = document.getElementById('scroll-anchor');
+            const scrollTarget = anchor.offsetTop - 60;
 
-        // Render at a high scale to keep text crisp, CSS will scale it down to fit the box
-        const scale = 2.0,
-              canvas = document.querySelector('#pdf-render'),
-              ctx = canvas.getContext('2d');
+            // 3. Hide all categories, and show the target category
+            document.querySelectorAll('.category-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById('category-' + catId).classList.add('active');
 
-        // Render the page
-        const renderPage = num => {
-            pageIsRendering = true;
-
-            // Get page
-            pdfDoc.getPage(num).then(page => {
-                const viewport = page.getViewport({ scale });
-                canvas.height = viewport.height;
-                canvas.width = viewport.width;
-
-                const renderCtx = {
-                    canvasContext: ctx,
-                    viewport: viewport
-                };
-
-                page.render(renderCtx).promise.then(() => {
-                    pageIsRendering = false;
-
-                    if (pageNumIsPending !== null) {
-                        renderPage(pageNumIsPending);
-                        pageNumIsPending = null;
-                    }
-                });
-
-                document.querySelector('#page-num').textContent = num;
+            // 4. Smooth scroll to the static anchor point
+            window.scrollTo({
+                top: scrollTarget,
+                behavior: 'smooth'
             });
         };
 
-        const queueRenderPage = num => {
-            if (pageIsRendering) {
-                pageNumIsPending = num;
-            } else {
-                renderPage(num);
+        // ==========================================
+        // PDF VIEWER LOGIC (Unchanged, scoped locally)
+        // ==========================================
+        function createPDFViewer(containerId, initialPdfUrl, driveUrl) {
+            let pdfDoc = null, pageNum = 1, pageIsRendering = false, pageNumIsPending = null;
+            const scale = 2.0;
+
+            const container = document.getElementById(containerId);
+            if(!container) return null;
+
+            const canvas = container.querySelector('.pdf-render');
+            const ctx = canvas.getContext('2d');
+
+            const renderPage = num => {
+                pageIsRendering = true;
+                pdfDoc.getPage(num).then(page => {
+                    const viewport = page.getViewport({ scale });
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+
+                    const renderCtx = { canvasContext: ctx, viewport: viewport };
+
+                    page.render(renderCtx).promise.then(() => {
+                        pageIsRendering = false;
+                        if (pageNumIsPending !== null) {
+                            renderPage(pageNumIsPending);
+                            pageNumIsPending = null;
+                        }
+                    });
+                    container.querySelector('.page-num').textContent = num;
+                });
+            };
+
+            const queueRenderPage = num => {
+                if (pageIsRendering) { pageNumIsPending = num; } 
+                else { renderPage(num); }
+            };
+
+            container.querySelector('.pdf-prev').addEventListener('click', () => {
+                if (pageNum <= 1) return;
+                pageNum--;
+                queueRenderPage(pageNum);
+            });
+
+            container.querySelector('.pdf-next').addEventListener('click', () => {
+                if (!pdfDoc || pageNum >= pdfDoc.numPages) return;
+                pageNum++;
+                queueRenderPage(pageNum);
+            });
+
+            container.querySelector('.pdf-start').addEventListener('click', () => {
+                if (pageNum <= 1) return;
+                pageNum = 1;
+                queueRenderPage(pageNum);
+            });
+
+            container.querySelector('.pdf-end').addEventListener('click', () => {
+                if (!pdfDoc || pageNum >= pdfDoc.numPages) return;
+                pageNum = pdfDoc.numPages;
+                queueRenderPage(pageNum);
+            });
+
+            container.querySelector('.pdf-new-tab').addEventListener('click', () => {
+                window.open(driveUrl, '_blank');
+            });
+
+            const loadDoc = (url) => {
+                pdfjsLib.getDocument(url).promise.then(pdfDoc_ => {
+                    pdfDoc = pdfDoc_;
+                    container.querySelector('.page-count').textContent = pdfDoc.numPages;
+                    pageNum = 1;
+                    renderPage(pageNum);
+                }).catch(err => {
+                    const errorDiv = document.createElement('div');
+                    errorDiv.style.color = '#ff3b30';
+                    errorDiv.style.textAlign = 'center';
+                    errorDiv.style.padding = '2rem';
+                    errorDiv.innerHTML = `<strong>File Not Found:</strong> ${url}<br><br><span style="color:var(--text-muted); font-size:0.9rem;">Make sure the file exists in the same folder as this index.html file.</span>`;
+                    
+                    const existingErr = container.querySelector('.pdf-error');
+                    if(existingErr) existingErr.remove();
+                    
+                    errorDiv.className = "pdf-error";
+                    canvas.style.display = 'none';
+                    container.querySelector('.pdf-canvas-wrapper').appendChild(errorDiv);
+                });
+            };
+
+            loadDoc(initialPdfUrl);
+            return { loadDoc, updateDriveUrl: (newUrl) => { driveUrl = newUrl; } };
+        }
+
+        // Initialize MicroStation Viewer
+        const microstationDriveLink = 'https://drive.google.com/file/d/1-H9ZP7M9uTUP1TM4XGHERQsbaWULBGne/view';
+        createPDFViewer('microstation-pdf-container', '1.pdf', microstationDriveLink);
+
+        // Initialize SolidWorks Viewer
+        const swDriveLinks = {
+            pdf1: 'https://drive.google.com/file/d/YOUR_GEARBOX_CALC_LINK/view',
+            pdf2: 'https://drive.google.com/file/d/YOUR_GEARBOX_DRAWING_LINK/view'
+        };
+        const swViewerInstance = createPDFViewer('sw-pdf-container', 'gearbox-calcs.pdf', swDriveLinks.pdf1);
+
+        // SolidWorks Internal Sub-Tabs
+        window.switchSWTab = function(tab, btnElement) {
+            document.querySelectorAll('.sw-tab-btn').forEach(b => b.classList.remove('active-tab'));
+            btnElement.classList.add('active-tab');
+
+            document.getElementById('sw-pdf-container').style.display = 'none';
+            document.getElementById('sw-3d-container').style.display = 'none';
+
+            if (tab === 'pdf1') {
+                document.getElementById('sw-pdf-container').style.display = 'flex';
+                document.querySelector('#sw-pdf-container .pdf-render').style.display = 'block'; 
+                if(swViewerInstance) {
+                    swViewerInstance.loadDoc('Design_II_Project_Report.pdf');
+                    swViewerInstance.updateDriveUrl(swDriveLinks.pdf1);
+                }
+            } else if (tab === 'pdf2') {
+                document.getElementById('sw-pdf-container').style.display = 'flex';
+                document.querySelector('#sw-pdf-container .pdf-render').style.display = 'block';
+                if(swViewerInstance) {
+                    swViewerInstance.loadDoc('Drawing.pdf');
+                    swViewerInstance.updateDriveUrl(swDriveLinks.pdf2);
+                }
+            } else if (tab === '3d') {
+                document.getElementById('sw-3d-container').style.display = 'block';
             }
         };
-
-        // Button Events
-        document.querySelector('#pdf-prev').addEventListener('click', () => {
-            if (pageNum <= 1) return;
-            pageNum--;
-            queueRenderPage(pageNum);
-        });
-
-        document.querySelector('#pdf-next').addEventListener('click', () => {
-            if (pageNum >= pdfDoc.numPages) return;
-            pageNum++;
-            queueRenderPage(pageNum);
-        });
-
-        document.querySelector('#pdf-start').addEventListener('click', () => {
-            if (pageNum <= 1) return;
-            pageNum = 1;
-            queueRenderPage(pageNum);
-        });
-
-        document.querySelector('#pdf-end').addEventListener('click', () => {
-            if (pageNum >= pdfDoc.numPages) return;
-            pageNum = pdfDoc.numPages;
-            queueRenderPage(pageNum);
-        });
-
-        // Opens the actual Google Drive link in a new tab!
-        document.querySelector('#pdf-new-tab').addEventListener('click', () => {
-            window.open(driveUrl, '_blank');
-        });
-
-        // Initialize PDF
-        pdfjsLib.getDocument(url).promise.then(pdfDoc_ => {
-            pdfDoc = pdfDoc_;
-            document.querySelector('#page-count').textContent = pdfDoc.numPages;
-            renderPage(pageNum);
-        }).catch(err => {
-            const div = document.createElement('div');
-            div.style.color = '#ff3b30';
-            div.style.textAlign = 'center';
-            div.style.padding = '2rem';
-            div.innerHTML = `<strong>Error loading PDF:</strong> ${err.message}<br><br><span style="color:var(--text-muted); font-size:0.9rem;">To fix the "204" error, make sure <strong>1.pdf</strong> is in the exact same folder as this index.html file, and restart your Live Server.</span>`;
-            document.querySelector('.pdf-canvas-wrapper').insertBefore(div, canvas);
-            canvas.style.display = 'none';
-        });
     </script>
 </body>
 </html>
