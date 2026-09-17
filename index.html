@@ -442,9 +442,28 @@
         }
         .pdf-btn:hover { background: rgba(0, 255, 185, 0.1); border-color: var(--siemens-cyan); box-shadow: 0 0 10px rgba(0, 255, 185, 0.2); }
 
-        /* Replace your existing .pdf-render with this: */
-.pdf-canvas-wrapper { width: 100%; display: flex; justify-content: center; background: #1e1e1e; padding: 1.5rem; box-sizing: border-box; }
-.pdf-render { width: 100%; height: auto; box-shadow: 0 5px 25px rgba(0,0,0,0.5); border-radius: 4px; }
+        /* Canvas Wrapper & Loading Spinner Styles */
+        .pdf-canvas-wrapper { 
+            width: 100%; display: flex; justify-content: center; 
+            background: #1e1e1e; padding: 1.5rem; box-sizing: border-box; 
+            position: relative; min-height: 300px;
+        }
+        .pdf-render { width: 100%; height: auto; box-shadow: 0 5px 25px rgba(0,0,0,0.5); border-radius: 4px; }
+        
+        .pdf-loader {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background: rgba(0, 0, 40, 0.75); padding: 1.5rem 2.5rem; border-radius: 12px;
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border); z-index: 5;
+        }
+        .spinner {
+            border: 4px solid rgba(0, 255, 185, 0.1); border-top: 4px solid var(--siemens-cyan);
+            border-radius: 50%; width: 45px; height: 45px;
+            animation: spin 1s linear infinite; margin-bottom: 0.8rem;
+        }
+        .progress-text { color: var(--siemens-cyan); font-weight: 600; font-size: 1.1rem; letter-spacing: 1px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
         model-viewer { width: 100%; height: 500px; background-color: #1e1e1e; border-radius: 4px; outline: none; }
         footer { text-align: center; padding: 4rem 1rem; color: var(--text-muted); font-size: 0.9rem; position: relative; z-index: 10; }
@@ -457,7 +476,6 @@
                 padding: 0.5rem;
                 border-radius: 20px;
                 white-space: nowrap;
-                /* Hides scrollbar for clean look on mobile */
                 -ms-overflow-style: none;  
                 scrollbar-width: none;  
             }
@@ -704,6 +722,11 @@
                         <button class="pdf-btn pdf-new-tab">Open in New Tab &#8599;</button>
                     </div>
                     <div class="pdf-canvas-wrapper">
+                        <!-- Loading UI -->
+                        <div class="pdf-loader" style="display: none;">
+                            <div class="spinner"></div>
+                            <div class="progress-text">0%</div>
+                        </div>
                         <canvas class="pdf-render"></canvas>
                     </div>
                 </div>
@@ -763,6 +786,11 @@
                         <button class="pdf-btn pdf-new-tab">Open in New Tab &#8599;</button>
                     </div>
                     <div class="pdf-canvas-wrapper">
+                        <!-- Loading UI -->
+                        <div class="pdf-loader" style="display: none;">
+                            <div class="spinner"></div>
+                            <div class="progress-text">0%</div>
+                        </div>
                         <canvas class="pdf-render"></canvas>
                     </div>
                 </div>
@@ -841,7 +869,6 @@
             btnElement.classList.add('active');
 
             // 2. Grab the static anchor's exact vertical position from the document.
-            // Subtracting 60 ensures we scroll a little bit higher, giving comfortable breathing room.
             const anchor = document.getElementById('scroll-anchor');
             const scrollTarget = anchor.offsetTop - 60;
 
@@ -859,7 +886,7 @@
         };
 
         // ==========================================
-        // PDF VIEWER LOGIC (Unchanged, scoped locally)
+        // PDF VIEWER LOGIC 
         // ==========================================
         function createPDFViewer(containerId, initialPdfUrl, driveUrl) {
             let pdfDoc = null, pageNum = 1, pageIsRendering = false, pageNumIsPending = null;
@@ -869,17 +896,22 @@
 
             const canvas = container.querySelector('.pdf-render');
             const ctx = canvas.getContext('2d');
+            const loader = container.querySelector('.pdf-loader');
+            const progressText = container.querySelector('.progress-text');
 
             const renderPage = num => {
                 pageIsRendering = true;
                 pdfDoc.getPage(num).then(page => {
-                    // DYNAMIC SCALING: Calculate scale based on the current wrapper width
                     const wrapper = container.querySelector('.pdf-canvas-wrapper');
-                    // Subtract roughly 48px to account for the 1.5rem padding on both sides
-                    const targetWidth = wrapper.clientWidth - 48; 
+                    
+                    // FIX: If the tab is hidden, clientWidth is 0. We provide a fallback width 
+                    // based on the window size so it doesn't render at 0 scale.
+                    let targetWidth = wrapper.clientWidth - 48; 
+                    if (targetWidth <= 0) {
+                        targetWidth = window.innerWidth > 900 ? 800 : window.innerWidth - 80;
+                    }
                     
                     const unscaledViewport = page.getViewport({ scale: 1.0 });
-                    // Use devicePixelRatio for crisp text on high-res/Retina displays
                     const dpr = window.devicePixelRatio || 1;
                     const dynamicScale = (targetWidth / unscaledViewport.width) * dpr;
 
@@ -935,28 +967,34 @@
             });
 
             const loadDoc = (url) => {
-                // BUG FIX: Clear any existing error messages before attempting to load the new file
-                const existingErr = container.querySelector('.pdf-error');
-                if(existingErr) existingErr.remove();
-                
-                // BUG FIX: Ensure canvas is visible in case it was hidden by a previous error
-                canvas.style.display = 'block';
+                // Show loader, hide canvas
+                if(loader) loader.style.display = 'flex';
+                canvas.style.display = 'none';
 
-                pdfjsLib.getDocument(url).promise.then(pdfDoc_ => {
+                const loadingTask = pdfjsLib.getDocument(url);
+                
+                // Track percentage
+                loadingTask.onProgress = function(progress) {
+                    if (progressText && progress.total > 0) {
+                        const percent = Math.round((progress.loaded / progress.total) * 100);
+                        progressText.textContent = percent + '%';
+                    }
+                };
+
+                loadingTask.promise.then(pdfDoc_ => {
                     pdfDoc = pdfDoc_;
                     container.querySelector('.page-count').textContent = pdfDoc.numPages;
                     pageNum = 1;
+                    
+                    // Hide loader, show canvas
+                    if(loader) loader.style.display = 'none';
+                    canvas.style.display = 'block';
+                    
                     renderPage(pageNum);
                 }).catch(err => {
-                    const errorDiv = document.createElement('div');
-                    errorDiv.style.color = '#ff3b30';
-                    errorDiv.style.textAlign = 'center';
-                    errorDiv.style.padding = '2rem';
-                    errorDiv.innerHTML = `<strong>File Not Found:</strong> ${url}<br><br><span style="color:var(--text-muted); font-size:0.9rem;">Make sure the file exists in the same folder as this index.html file.</span>`;
-                    
-                    errorDiv.className = "pdf-error";
-                    canvas.style.display = 'none'; // Hide the canvas since we have an error
-                    container.querySelector('.pdf-canvas-wrapper').appendChild(errorDiv);
+                    // Suppress visual error messages completely. Just hide the loader.
+                    if(loader) loader.style.display = 'none';
+                    console.warn("PDF intentionally hidden or not found:", url);
                 });
             };
 
@@ -973,7 +1011,7 @@
             pdf1: 'https://drive.google.com/file/d/YOUR_GEARBOX_CALC_LINK/view',
             pdf2: 'https://drive.google.com/file/d/YOUR_GEARBOX_DRAWING_LINK/view'
         };
-        const nxViewerInstance = createPDFViewer('nx-pdf-container', 'gearbox-calcs.pdf', nxDriveLinks.pdf1);
+        const nxViewerInstance = createPDFViewer('nx-pdf-container', 'Design_II_Project_Report.pdf', nxDriveLinks.pdf1);
 
         // NX Internal Sub-Tabs
         window.switchNXTab = function(tab, btnElement) {
@@ -985,14 +1023,12 @@
 
             if (tab === 'pdf1') {
                 document.getElementById('nx-pdf-container').style.display = 'flex';
-                document.querySelector('#nx-pdf-container .pdf-render').style.display = 'block'; 
                 if(nxViewerInstance) {
                     nxViewerInstance.loadDoc('Design_II_Project_Report.pdf');
                     nxViewerInstance.updateDriveUrl(nxDriveLinks.pdf1);
                 }
             } else if (tab === 'pdf2') {
                 document.getElementById('nx-pdf-container').style.display = 'flex';
-                document.querySelector('#nx-pdf-container .pdf-render').style.display = 'block';
                 if(nxViewerInstance) {
                     nxViewerInstance.loadDoc('Drawing.pdf');
                     nxViewerInstance.updateDriveUrl(nxDriveLinks.pdf2);
