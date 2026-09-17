@@ -643,45 +643,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- SolidWorks Project & Multi-Viewer -->
-            <div class="cert-card">
-                <h3>Mechanical Design: 175 kW Double-Reduction Gearbox</h3>
-                <ul class="project-list">
-                    <li>Engineered a heavy-duty parallel shaft gearbox tailored for local manufacturing capabilities.</li>
-                    <li>Specified spur gears over helical geometries to accommodate specific local casting constraints and simplify fabrication.</li>
-                    <li>Calculated bearing life and performed detailed shaft stress analysis for robust performance.</li>
-                </ul>
-
-                <div class="viewer-tabs">
-                    <button class="tab-btn sw-tab-btn active-tab" onclick="switchSWTab('pdf1', this)">Calculations PDF</button>
-                    <button class="tab-btn sw-tab-btn" onclick="switchSWTab('pdf2', this)">Assembly Drawings</button>
-                    <button class="tab-btn sw-tab-btn" onclick="switchSWTab('3d', this)">Interactive 3D Model</button>
-                </div>
-
-                <div class="pdf-wrapper-container" id="sw-pdf-container">
-                    <div class="pdf-toolbar">
-                        <div class="pdf-controls">
-                            <button class="pdf-btn pdf-start">|&#9664; Start</button>
-                            <button class="pdf-btn pdf-prev">&#9664; Previous</button>
-                            <span style="color: var(--text-muted); font-size: 0.95rem; margin: 0 0.8rem;">
-                                Page <span class="page-num" style="color: var(--text-main); font-weight: bold;">1</span> of <span class="page-count" style="font-weight: bold;">--</span>
-                            </span>
-                            <button class="pdf-btn pdf-next">Next &#9654;</button>
-                            <button class="pdf-btn pdf-end">End &#9654;|</button>
-                        </div>
-                        <button class="pdf-btn pdf-new-tab">Open in New Tab &#8599;</button>
-                    </div>
-                    <div class="pdf-canvas-wrapper">
-                        <canvas class="pdf-render"></canvas>
-                    </div>
-                </div>
-
-                <div class="pdf-wrapper-container" id="sw-3d-container" style="display: none; padding: 1rem;">
-                    <model-viewer src="gearbox.glb" camera-controls auto-rotate shadow-intensity="1" exposure="1.2"></model-viewer>
-                    <p style="text-align: center; color: var(--text-muted); font-size: 0.85rem; margin-top: 0.5rem;">Drag to rotate • Scroll to zoom</p>
-                </div>
-            </div>
         </section>
 
         <section id="catia" class="software-section">
@@ -713,7 +674,7 @@
                 <p>Active since May 2025 within the Siemens global academic team. Championing the adoption and technical mastery of Siemens Digital Industries Software platforms among peers.</p>
             </div>
 
-<!-- SolidWorks Project & Multi-Viewer -->
+            <!-- NX Project & Multi-Viewer -->
             <div class="cert-card">
                 <h3>Mechanical Design: 175 kW Double-Reduction Gearbox</h3>
                 <ul class="project-list">
@@ -723,12 +684,12 @@
                 </ul>
 
                 <div class="viewer-tabs">
-                    <button class="tab-btn sw-tab-btn active-tab" onclick="switchSWTab('pdf1', this)">Calculations PDF</button>
-                    <button class="tab-btn sw-tab-btn" onclick="switchSWTab('pdf2', this)">Assembly Drawings</button>
-                    <button class="tab-btn sw-tab-btn" onclick="switchSWTab('3d', this)">Interactive 3D Model</button>
+                    <button class="tab-btn nx-tab-btn active-tab" onclick="switchNXTab('pdf1', this)">Calculations PDF</button>
+                    <button class="tab-btn nx-tab-btn" onclick="switchNXTab('pdf2', this)">Assembly Drawings</button>
+                    <button class="tab-btn nx-tab-btn" onclick="switchNXTab('3d', this)">Interactive 3D Model</button>
                 </div>
 
-                <div class="pdf-wrapper-container" id="sw-pdf-container">
+                <div class="pdf-wrapper-container" id="nx-pdf-container">
                     <div class="pdf-toolbar">
                         <div class="pdf-controls">
                             <button class="pdf-btn pdf-start">|&#9664; Start</button>
@@ -746,14 +707,11 @@
                     </div>
                 </div>
 
-                <div class="pdf-wrapper-container" id="sw-3d-container" style="display: none; padding: 1rem;">
-                    <model-viewer src="gearbox.glb" camera-controls auto-rotate shadow-intensity="1" exposure="1.2"></model-viewer>
+                <div class="pdf-wrapper-container" id="nx-3d-container" style="display: none; padding: 1rem;">
+                    <model-viewer src="GEVO.glb" camera-controls auto-rotate shadow-intensity="1" exposure="1.2"></model-viewer>
                     <p style="text-align: center; color: var(--text-muted); font-size: 0.85rem; margin-top: 0.5rem;">Drag to rotate • Scroll to zoom</p>
                 </div>
             </div>
-
-
-
         </section>
     </div> <!-- /END CATEGORY: MECH -->
 
@@ -995,37 +953,37 @@
         const microstationDriveLink = 'https://drive.google.com/file/d/1-H9ZP7M9uTUP1TM4XGHERQsbaWULBGne/view';
         createPDFViewer('microstation-pdf-container', '1.pdf', microstationDriveLink);
 
-        // Initialize SolidWorks Viewer
-        const swDriveLinks = {
+        // Initialize NX Gearbox Viewer
+        const nxDriveLinks = {
             pdf1: 'https://drive.google.com/file/d/YOUR_GEARBOX_CALC_LINK/view',
             pdf2: 'https://drive.google.com/file/d/YOUR_GEARBOX_DRAWING_LINK/view'
         };
-        const swViewerInstance = createPDFViewer('sw-pdf-container', 'gearbox-calcs.pdf', swDriveLinks.pdf1);
+        const nxViewerInstance = createPDFViewer('nx-pdf-container', 'gearbox-calcs.pdf', nxDriveLinks.pdf1);
 
-        // SolidWorks Internal Sub-Tabs
-        window.switchSWTab = function(tab, btnElement) {
-            document.querySelectorAll('.sw-tab-btn').forEach(b => b.classList.remove('active-tab'));
+        // NX Internal Sub-Tabs
+        window.switchNXTab = function(tab, btnElement) {
+            document.querySelectorAll('.nx-tab-btn').forEach(b => b.classList.remove('active-tab'));
             btnElement.classList.add('active-tab');
 
-            document.getElementById('sw-pdf-container').style.display = 'none';
-            document.getElementById('sw-3d-container').style.display = 'none';
+            document.getElementById('nx-pdf-container').style.display = 'none';
+            document.getElementById('nx-3d-container').style.display = 'none';
 
             if (tab === 'pdf1') {
-                document.getElementById('sw-pdf-container').style.display = 'flex';
-                document.querySelector('#sw-pdf-container .pdf-render').style.display = 'block'; 
-                if(swViewerInstance) {
-                    swViewerInstance.loadDoc('Design_II_Project_Report.pdf');
-                    swViewerInstance.updateDriveUrl(swDriveLinks.pdf1);
+                document.getElementById('nx-pdf-container').style.display = 'flex';
+                document.querySelector('#nx-pdf-container .pdf-render').style.display = 'block'; 
+                if(nxViewerInstance) {
+                    nxViewerInstance.loadDoc('Design_II_Project_Report.pdf');
+                    nxViewerInstance.updateDriveUrl(nxDriveLinks.pdf1);
                 }
             } else if (tab === 'pdf2') {
-                document.getElementById('sw-pdf-container').style.display = 'flex';
-                document.querySelector('#sw-pdf-container .pdf-render').style.display = 'block';
-                if(swViewerInstance) {
-                    swViewerInstance.loadDoc('Drawing.pdf');
-                    swViewerInstance.updateDriveUrl(swDriveLinks.pdf2);
+                document.getElementById('nx-pdf-container').style.display = 'flex';
+                document.querySelector('#nx-pdf-container .pdf-render').style.display = 'block';
+                if(nxViewerInstance) {
+                    nxViewerInstance.loadDoc('Drawing.pdf');
+                    nxViewerInstance.updateDriveUrl(nxDriveLinks.pdf2);
                 }
             } else if (tab === '3d') {
-                document.getElementById('sw-3d-container').style.display = 'block';
+                document.getElementById('nx-3d-container').style.display = 'block';
             }
         };
     </script>
