@@ -106,7 +106,6 @@
             display: flex;
         }
 
-        /* Fixed width for dots so the text doesn't jump back and forth */
         .loading-dots {
             display: inline-block;
             width: 1.5em;
@@ -130,7 +129,7 @@
             background: var(--grad-siemens);
             box-shadow: 0 0 15px var(--siemens-cyan);
             border-radius: 10px;
-            transition: width 0.1s ease-out; /* Faster visual update */
+            transition: width 0.1s ease-out;
         }
 
         .loader-percentage {
@@ -256,11 +255,9 @@
             height: auto;
             display: block;
             margin-bottom: 2rem;
-            /* Animation has been removed from here and assigned to a class */
             filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.4));
         }
 
-        /* Dynamically triggered class for the popping animation */
         .profile-pic.pop-active {
             animation: autoHover 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
         }
@@ -510,7 +507,7 @@
         .badge-stat p { font-size: 1rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 0;}
 
         /* ==========================================
-           8. CUSTOM PDF & 3D VIEWER STYLES
+           8. CUSTOM PDF, IMAGES & 3D VIEWER STYLES
            ========================================== */
         .project-list { margin-left: 1.8rem; margin-bottom: 1rem; color: var(--text-muted); font-size: 1.05rem; }
         .project-list li { margin-bottom: 0.5rem; }
@@ -525,28 +522,80 @@
         }
 
         .pdf-wrapper-container {
-            border: 1px solid var(--glass-border); border-radius: 12px; background: rgba(0, 0, 0, 0.4); overflow: hidden; display: flex; flex-direction: column;
+            border: 1px solid var(--glass-border); border-radius: 12px; background: rgba(0, 0, 0, 0.4); 
+            overflow: hidden; display: flex; flex-direction: column; position: relative; min-height: 400px;
         }
-
-        .pdf-toolbar {
-            display: flex; justify-content: space-between; align-items: center; padding: 1rem;
-            background: rgba(0, 255, 185, 0.05); border-bottom: 1px solid var(--glass-border); flex-wrap: wrap; gap: 1rem;
-        }
-
-        .pdf-controls { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
-        .pdf-btn {
-            background: transparent; border: 1px solid var(--glass-border); color: var(--text-main);
-            padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; font-weight: 600; font-size: 0.9rem; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-        }
-        .pdf-btn:hover { background: rgba(0, 255, 185, 0.1); border-color: var(--siemens-cyan); box-shadow: 0 0 10px rgba(0, 255, 185, 0.2); }
 
         .pdf-canvas-wrapper { 
             width: 100%; display: flex; justify-content: center; 
             background: #1e1e1e; padding: 1.5rem; box-sizing: border-box; 
-            position: relative; min-height: 300px;
+            position: relative; min-height: 300px; overflow: auto;
         }
-        .pdf-render { width: 100%; height: auto; box-shadow: 0 5px 25px rgba(0,0,0,0.5); border-radius: 4px; }
+        .pdf-render { width: 100%; height: auto; box-shadow: 0 5px 25px rgba(0,0,0,0.5); border-radius: 4px; margin: 0 auto; }
         
+        /* Floating Glass Widget Controls */
+        .floating-controls {
+            position: absolute;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            /* Transparent Background */
+            background: transparent; 
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-highlight);
+            padding: 0.6rem 1rem;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 15px rgba(0, 255, 185, 0.05);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+            z-index: 20;
+        }
+        
+        .pdf-wrapper-container.mouse-active .floating-controls,
+        .floating-controls:hover {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .floating-btn {
+            background: transparent; 
+            border: 1px solid transparent; 
+            color: var(--text-main);
+            width: 36px; height: 36px; 
+            border-radius: 50%; 
+            cursor: pointer; 
+            transition: all 0.3s ease; 
+            font-size: 1rem;
+            display: flex; align-items: center; justify-content: center;
+        }
+        
+        .floating-btn:hover { 
+            background: rgba(0, 255, 185, 0.15); 
+            color: var(--siemens-cyan);
+            border-color: var(--siemens-cyan); 
+            box-shadow: 0 0 15px rgba(0, 255, 185, 0.3); 
+        }
+
+        .floating-text {
+            color: var(--text-main); font-size: 0.95rem; font-weight: 600;
+            margin: 0 0.5rem; letter-spacing: 0.5px; white-space: nowrap;
+        }
+        
+        .floating-divider {
+            width: 1px; height: 20px; background: var(--glass-border); margin: 0 0.5rem;
+        }
+
+        /* Gallery Viewer Additions */
+        .gallery-img-wrapper {
+            width: 100%; height: 500px; display: flex; justify-content: center; align-items: center; background: #1e1e1e;
+        }
+        .gallery-img { max-width: 100%; max-height: 100%; object-fit: contain; }
+
         .pdf-loader {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -621,7 +670,6 @@
             }
             .qr-side { flex: 0 0 auto; }
             .profile-center { order: -1; width: 100%; }
-            .pdf-toolbar { justify-content: center; }
             .pdf-canvas-wrapper { padding: 0.5rem; }
             .header-content h1 { font-size: 1.5rem; }
         }
@@ -705,8 +753,6 @@
                         pageLoader.style.opacity = '0';
                         pageLoader.style.visibility = 'hidden';
                         
-                        // The CSS transition for opacity takes 0.6s (600ms).
-                        // Adding the 'pop-active' class right after this finishes ensures no overlap!
                         setTimeout(() => {
                             if (profilePic) {
                                 profilePic.classList.add('pop-active');
@@ -978,19 +1024,8 @@
                     <button class="tab-btn nx-tab-btn" onclick="switchNXTab('3d', this)">Interactive 3D Model</button>
                 </div>
 
-                <div class="pdf-wrapper-container" id="nx-pdf-container">
-                    <div class="pdf-toolbar">
-                        <div class="pdf-controls">
-                            <button class="pdf-btn pdf-start">|&#9664; Start</button>
-                            <button class="pdf-btn pdf-prev">&#9664; Previous</button>
-                            <span style="color: var(--text-muted); font-size: 0.95rem; margin: 0 0.8rem;">
-                                Page <span class="page-num" style="color: var(--text-main); font-weight: bold;">1</span> of <span class="page-count" style="font-weight: bold;">--</span>
-                            </span>
-                            <button class="pdf-btn pdf-next">Next &#9654;</button>
-                            <button class="pdf-btn pdf-end">End &#9654;|</button>
-                        </div>
-                        <button class="pdf-btn pdf-new-tab">Open in New Tab &#8599;</button>
-                    </div>
+                <!-- Updated PDF Viewer with transparent floating controls -->
+                <div class="pdf-wrapper-container mouse-tracker" id="nx-pdf-container">
                     <div class="pdf-canvas-wrapper">
                         <!-- Loading UI -->
                         <div class="pdf-loader" style="display: none;">
@@ -998,6 +1033,16 @@
                             <div class="progress-text">0%</div>
                         </div>
                         <canvas class="pdf-render"></canvas>
+                    </div>
+                    <!-- Hover Control Widget -->
+                    <div class="floating-controls">
+                        <button class="floating-btn pdf-start" title="Start">|&#9664;</button>
+                        <button class="floating-btn pdf-prev" title="Previous">&#9664;</button>
+                        <span class="floating-text"><span class="page-num">1</span> / <span class="page-count">--</span></span>
+                        <button class="floating-btn pdf-next" title="Next">&#9654;</button>
+                        <button class="floating-btn pdf-end" title="End">&#9654;|</button>
+                        <div class="floating-divider"></div>
+                        <button class="floating-btn pdf-new-tab" title="Open in Drive">&#8599;</button>
                     </div>
                 </div>
 
@@ -1044,19 +1089,8 @@
                     <li>Generation of precision documentation optimized for engineering execution.</li>
                 </ul>
 
-                <div class="pdf-wrapper-container" id="microstation-pdf-container">
-                    <div class="pdf-toolbar">
-                        <div class="pdf-controls">
-                            <button class="pdf-btn pdf-start">|&#9664; Start</button>
-                            <button class="pdf-btn pdf-prev">&#9664; Previous</button>
-                            <span style="color: var(--text-muted); font-size: 0.95rem; margin: 0 0.8rem;">
-                                Page <span class="page-num" style="color: var(--text-main); font-weight: bold;">1</span> of <span class="page-count" style="font-weight: bold;">--</span>
-                            </span>
-                            <button class="pdf-btn pdf-next">Next &#9654;</button>
-                            <button class="pdf-btn pdf-end">End &#9654;|</button>
-                        </div>
-                        <button class="pdf-btn pdf-new-tab">Open in New Tab &#8599;</button>
-                    </div>
+                <!-- Updated PDF Viewer with transparent floating controls -->
+                <div class="pdf-wrapper-container mouse-tracker" id="microstation-pdf-container">
                     <div class="pdf-canvas-wrapper">
                         <!-- Loading UI -->
                         <div class="pdf-loader" style="display: none;">
@@ -1064,6 +1098,16 @@
                             <div class="progress-text">0%</div>
                         </div>
                         <canvas class="pdf-render"></canvas>
+                    </div>
+                    <!-- Hover Control Widget -->
+                    <div class="floating-controls">
+                        <button class="floating-btn pdf-start" title="Start">|&#9664;</button>
+                        <button class="floating-btn pdf-prev" title="Previous">&#9664;</button>
+                        <span class="floating-text"><span class="page-num">1</span> / <span class="page-count">--</span></span>
+                        <button class="floating-btn pdf-next" title="Next">&#9654;</button>
+                        <button class="floating-btn pdf-end" title="End">&#9654;|</button>
+                        <div class="floating-divider"></div>
+                        <button class="floating-btn pdf-new-tab" title="Open in Drive">&#8599;</button>
                     </div>
                 </div>
             </div>
@@ -1091,20 +1135,16 @@
                     <li>Comprehensive multi-disciplinary BIM model for a modern transportation station.</li>
                     <li>Detailed integration of critical HVAC and plumbing (MEP) systems alongside full structural and architectural disciplines.</li>
                 </ul>
+                
+                <!-- Added new tabs for Renders and MEP images -->
+                <div class="viewer-tabs">
+                    <button class="tab-btn ob-tab-btn active-tab" onclick="switchOBTab('pdf', this)">Documentation PDF</button>
+                    <button class="tab-btn ob-tab-btn" onclick="switchOBTab('renders', this)">Building Renders</button>
+                    <button class="tab-btn ob-tab-btn" onclick="switchOBTab('mep', this)">MEP Works</button>
+                </div>
 
-                <div class="pdf-wrapper-container" id="openbuildings-pdf-container">
-                    <div class="pdf-toolbar">
-                        <div class="pdf-controls">
-                            <button class="pdf-btn pdf-start">|&#9664; Start</button>
-                            <button class="pdf-btn pdf-prev">&#9664; Previous</button>
-                            <span style="color: var(--text-muted); font-size: 0.95rem; margin: 0 0.8rem;">
-                                Page <span class="page-num" style="color: var(--text-main); font-weight: bold;">1</span> of <span class="page-count" style="font-weight: bold;">--</span>
-                            </span>
-                            <button class="pdf-btn pdf-next">Next &#9654;</button>
-                            <button class="pdf-btn pdf-end">End &#9654;|</button>
-                        </div>
-                        <button class="pdf-btn pdf-new-tab">Open in New Tab &#8599;</button>
-                    </div>
+                <!-- OpenBuildings PDF Viewer -->
+                <div class="pdf-wrapper-container mouse-tracker" id="openbuildings-pdf-container">
                     <div class="pdf-canvas-wrapper">
                         <!-- Loading UI -->
                         <div class="pdf-loader" style="display: none;">
@@ -1113,7 +1153,44 @@
                         </div>
                         <canvas class="pdf-render"></canvas>
                     </div>
+                    <!-- Hover Control Widget -->
+                    <div class="floating-controls">
+                        <button class="floating-btn pdf-start" title="Start">|&#9664;</button>
+                        <button class="floating-btn pdf-prev" title="Previous">&#9664;</button>
+                        <span class="floating-text"><span class="page-num">1</span> / <span class="page-count">--</span></span>
+                        <button class="floating-btn pdf-next" title="Next">&#9654;</button>
+                        <button class="floating-btn pdf-end" title="End">&#9654;|</button>
+                        <div class="floating-divider"></div>
+                        <button class="floating-btn pdf-new-tab" title="Open in Drive">&#8599;</button>
+                    </div>
                 </div>
+                
+                <!-- OpenBuildings Building Renders Viewer -->
+                <div class="pdf-wrapper-container mouse-tracker" id="openbuildings-renders-container" style="display: none;">
+                    <div class="gallery-img-wrapper">
+                        <img class="gallery-img" src="" alt="Render Preview">
+                    </div>
+                    <!-- Hover Control Widget for Images -->
+                    <div class="floating-controls">
+                        <button class="floating-btn gal-prev" title="Previous">&#9664;</button>
+                        <span class="floating-text">Image <span class="page-num">1</span> / <span class="page-count">3</span></span>
+                        <button class="floating-btn gal-next" title="Next">&#9654;</button>
+                    </div>
+                </div>
+
+                <!-- OpenBuildings MEP Works Viewer -->
+                <div class="pdf-wrapper-container mouse-tracker" id="openbuildings-mep-container" style="display: none;">
+                    <div class="gallery-img-wrapper">
+                        <img class="gallery-img" src="" alt="MEP Preview">
+                    </div>
+                    <!-- Hover Control Widget for Images -->
+                    <div class="floating-controls">
+                        <button class="floating-btn gal-prev" title="Previous">&#9664;</button>
+                        <span class="floating-text">Image <span class="page-num">1</span> / <span class="page-count">3</span></span>
+                        <button class="floating-btn gal-next" title="Next">&#9654;</button>
+                    </div>
+                </div>
+
             </div>
         </section>
 
@@ -1175,6 +1252,26 @@
     </footer>
 
     <script>
+        // ==========================================
+        // MOUSE FADE TRACKER FOR VIEWER WIDGETS
+        // ==========================================
+        function setupMouseFade() {
+            document.querySelectorAll('.mouse-tracker').forEach(container => {
+                let timeout;
+                container.addEventListener('mousemove', () => {
+                    container.classList.add('mouse-active');
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => {
+                        container.classList.remove('mouse-active');
+                    }, 2500); // Fades out after 2.5 seconds of mouse inactivity
+                });
+                container.addEventListener('mouseleave', () => {
+                    clearTimeout(timeout);
+                    container.classList.remove('mouse-active');
+                });
+            });
+        }
+
         // ==========================================
         // MAIN CATEGORY TAB SWITCHING LOGIC
         // ==========================================
@@ -1306,46 +1403,114 @@
             loadDoc(initialPdfUrl);
             return { loadDoc, updateDriveUrl: (newUrl) => { driveUrl = newUrl; } };
         }
+        
+        // ==========================================
+        // IMAGE GALLERY LOGIC 
+        // ==========================================
+        function createGalleryViewer(containerId, imagesArray) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            const imgElement = container.querySelector('.gallery-img');
+            const numText = container.querySelector('.page-num');
+            const totalText = container.querySelector('.page-count');
+            let currentIndex = 0;
 
-        // Initialize MicroStation Viewer
-        const microstationDriveLink = 'https://drive.google.com/file/d/1-H9ZP7M9uTUP1TM4XGHERQsbaWULBGne/view';
-        createPDFViewer('microstation-pdf-container', '1.pdf', microstationDriveLink);
+            totalText.textContent = imagesArray.length;
 
-        // Initialize OpenBuildings Viewer
-        const openBuildingsDriveLink = 'https://drive.google.com/file/d/YOUR_OPENBUILDINGS_PDF_LINK/view';
-        createPDFViewer('openbuildings-pdf-container', 'Station Building_US.pdf', openBuildingsDriveLink);
+            const updateImg = () => {
+                imgElement.src = imagesArray[currentIndex];
+                numText.textContent = currentIndex + 1;
+            };
 
-        // Initialize NX Gearbox Viewer
-        const nxDriveLinks = {
-            pdf1: 'https://drive.google.com/file/d/YOUR_GEARBOX_CALC_LINK/view',
-            pdf2: 'https://drive.google.com/file/d/YOUR_GEARBOX_DRAWING_LINK/view'
-        };
-        const nxViewerInstance = createPDFViewer('nx-pdf-container', 'Design_II_Project_Report.pdf', nxDriveLinks.pdf1);
+            container.querySelector('.gal-prev').addEventListener('click', () => {
+                if (currentIndex > 0) { currentIndex--; updateImg(); }
+            });
+            container.querySelector('.gal-next').addEventListener('click', () => {
+                if (currentIndex < imagesArray.length - 1) { currentIndex++; updateImg(); }
+            });
+            updateImg();
+        }
 
-        // NX Internal Sub-Tabs
-        window.switchNXTab = function(tab, btnElement) {
-            document.querySelectorAll('.nx-tab-btn').forEach(b => b.classList.remove('active-tab'));
-            btnElement.classList.add('active-tab');
+        // Initialize features when DOM is ready
+        document.addEventListener("DOMContentLoaded", () => {
+            
+            // Activate the fading tracking mechanism
+            setupMouseFade();
+            
+            // Initialize MicroStation Viewer
+            const microstationDriveLink = 'https://drive.google.com/file/d/1-H9ZP7M9uTUP1TM4XGHERQsbaWULBGne/view';
+            createPDFViewer('microstation-pdf-container', '1.pdf', microstationDriveLink);
 
-            document.getElementById('nx-pdf-container').style.display = 'none';
-            document.getElementById('nx-3d-container').style.display = 'none';
+            // Initialize OpenBuildings PDF Viewer
+            const openBuildingsDriveLink = 'https://drive.google.com/file/d/YOUR_OPENBUILDINGS_PDF_LINK/view';
+            createPDFViewer('openbuildings-pdf-container', 'Station Building_US.pdf', openBuildingsDriveLink);
+            
+            // Image Galleries Data (Replace with your actual images)
+            const rendersList = [
+                'Render1.jpg',
+                'Render2.jpg',
+                'Render3.jpg',
+                'Render4.jpg'
+            ];
+            const mepList = [
+                'MEP1.jpg',
+                'MEP2.jpg',
+                'MEP3.jpg'
+            ];
+            // Initialize Image Galleries
+            createGalleryViewer('openbuildings-renders-container', rendersList);
+            createGalleryViewer('openbuildings-mep-container', mepList);
 
-            if (tab === 'pdf1') {
-                document.getElementById('nx-pdf-container').style.display = 'flex';
-                if(nxViewerInstance) {
-                    nxViewerInstance.loadDoc('Design_II_Project_Report.pdf');
-                    nxViewerInstance.updateDriveUrl(nxDriveLinks.pdf1);
+            // Initialize NX Gearbox Viewer
+            const nxDriveLinks = {
+                pdf1: 'https://drive.google.com/file/d/YOUR_GEARBOX_CALC_LINK/view',
+                pdf2: 'https://drive.google.com/file/d/YOUR_GEARBOX_DRAWING_LINK/view'
+            };
+            const nxViewerInstance = createPDFViewer('nx-pdf-container', 'Design_II_Project_Report.pdf', nxDriveLinks.pdf1);
+
+            // NX Internal Sub-Tabs
+            window.switchNXTab = function(tab, btnElement) {
+                document.querySelectorAll('.nx-tab-btn').forEach(b => b.classList.remove('active-tab'));
+                btnElement.classList.add('active-tab');
+
+                document.getElementById('nx-pdf-container').style.display = 'none';
+                document.getElementById('nx-3d-container').style.display = 'none';
+
+                if (tab === 'pdf1') {
+                    document.getElementById('nx-pdf-container').style.display = 'flex';
+                    if(nxViewerInstance) {
+                        nxViewerInstance.loadDoc('Design_II_Project_Report.pdf');
+                        nxViewerInstance.updateDriveUrl(nxDriveLinks.pdf1);
+                    }
+                } else if (tab === 'pdf2') {
+                    document.getElementById('nx-pdf-container').style.display = 'flex';
+                    if(nxViewerInstance) {
+                        nxViewerInstance.loadDoc('Drawing.pdf');
+                        nxViewerInstance.updateDriveUrl(nxDriveLinks.pdf2);
+                    }
+                } else if (tab === '3d') {
+                    document.getElementById('nx-3d-container').style.display = 'block';
                 }
-            } else if (tab === 'pdf2') {
-                document.getElementById('nx-pdf-container').style.display = 'flex';
-                if(nxViewerInstance) {
-                    nxViewerInstance.loadDoc('Drawing.pdf');
-                    nxViewerInstance.updateDriveUrl(nxDriveLinks.pdf2);
+            };
+            
+            // OpenBuildings Internal Sub-Tabs Logic
+            window.switchOBTab = function(tab, btnElement) {
+                document.querySelectorAll('.ob-tab-btn').forEach(b => b.classList.remove('active-tab'));
+                btnElement.classList.add('active-tab');
+                
+                document.getElementById('openbuildings-pdf-container').style.display = 'none';
+                document.getElementById('openbuildings-renders-container').style.display = 'none';
+                document.getElementById('openbuildings-mep-container').style.display = 'none';
+
+                if (tab === 'pdf') {
+                    document.getElementById('openbuildings-pdf-container').style.display = 'flex';
+                } else if (tab === 'renders') {
+                    document.getElementById('openbuildings-renders-container').style.display = 'flex';
+                } else if (tab === 'mep') {
+                    document.getElementById('openbuildings-mep-container').style.display = 'flex';
                 }
-            } else if (tab === '3d') {
-                document.getElementById('nx-3d-container').style.display = 'block';
-            }
-        };
+            };
+        });
     </script>
 </body>
 </html>
