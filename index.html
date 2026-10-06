@@ -542,14 +542,18 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            /* Transparent Background */
-            background: transparent; 
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--glass-highlight);
+            
+            /* Updated Style: Matches the main category bar */
+            background: rgba(0, 0, 40, 0.65); 
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4), inset 0 0 15px rgba(0,255,185,0.05);
+            
             padding: 0.6rem 1rem;
             border-radius: 50px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 15px rgba(0, 255, 185, 0.05);
+            
+            /* Keeps the fade-in/out behavior */
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.4s ease, visibility 0.4s ease;
